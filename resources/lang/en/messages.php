@@ -3595,4 +3595,5 @@
   'results' => 'Results',
   'Showing' => 'Showing',
   'Pagination Navigation' => 'Pagination Navigation',
+  'The password must be at least 6 characters.' => 'The password must be at least 6 characters.',
 );

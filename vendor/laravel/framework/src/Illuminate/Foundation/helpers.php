@@ -134,29 +134,6 @@ if (! function_exists('app_path')) {
     }
 }
 
-//if (! function_exists('asset')) {
-//    /**
-//     * Generate an asset path for the application.
-//     *
-//     * @param  string  $path
-//     * @param  bool|null  $secure
-//     * @return string
-//     */
-//    function asset($path, $secure = null)
-//    {
-//        $path = str_replace('public/', '', $path);
-//        // You can keep the existing code related to 'url' if needed
-//        // return app('url')->asset($path, $secure);
-//        // return app('url')->asset("".$path, $secure);
-//        return $path;
-////        return app('url')->asset($path, $secure);
-//    }
-////    function asset($path, $secure = null)
-////    {
-////        return app('url')->asset($path, $secure);
-////    }
-//}
-
 if (! function_exists('asset')) {
     /**
      * Generate an asset path for the application.
@@ -167,9 +144,32 @@ if (! function_exists('asset')) {
      */
     function asset($path, $secure = null)
     {
-        return app('url')->asset($path, $secure);
+        $path = str_replace('public/', '', $path);
+        // You can keep the existing code related to 'url' if needed
+        // return app('url')->asset($path, $secure);
+        // return app('url')->asset("".$path, $secure);
+        return $path;
+//        return app('url')->asset($path, $secure);
     }
+//    function asset($path, $secure = null)
+//    {
+//        return app('url')->asset($path, $secure);
+//    }
 }
+
+//if (! function_exists('asset')) {
+//    /**
+//     * Generate an asset path for the application.
+//     *
+//     * @param  string  $path
+//     * @param  bool|null  $secure
+//     * @return string
+//     */
+//    function asset($path, $secure = null)
+//    {
+//        return app('url')->asset($path, $secure);
+//    }
+//}
 
 if (! function_exists('auth')) {
     /**

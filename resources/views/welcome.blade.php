@@ -3,7 +3,6 @@
 @section('title',translate('Payment_Setup'))
 
 @push('css_or_js')
-
 @endpush
 
 @section('content')
