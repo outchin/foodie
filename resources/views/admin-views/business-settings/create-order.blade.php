@@ -621,7 +621,7 @@
             // ... get other input values ...
             console.log("======");
             // API Call 1
-            const distanceAPI = `https://www.chelpanyoung1234.click/api/v1/config/distance-api?origin_lat=${senderLatitude}&origin_lng=${senderLongitude}&destination_lat=${receiverLatitude}&destination_lng=${receiverLongitude}&mode=walking`;
+            const distanceAPI = `https://www.foodie-mandalay.click/api/v1/config/distance-api?origin_lat=${senderLatitude}&origin_lng=${senderLongitude}&destination_lat=${receiverLatitude}&destination_lng=${receiverLongitude}&mode=walking`;
 
             makeAPICall(distanceAPI, function (response1) {
                 const distanceValue = response1.rows[0].elements[0].distance.value;
@@ -629,7 +629,7 @@
                 console.log(" distance is  " + distanceValue);
                 console.log(" distance is real  " + realDistanceValue);
                 // API Call 2
-                const extraChargeAPI = `https://www.chelpanyoung1234.click/api/v1/vehicle/extra_charge?distance=${realDistanceValue}`;
+                const extraChargeAPI = `https://www.foodie-mandalay.click/api/v1/vehicle/extra_charge?distance=${realDistanceValue}`;
 
                 makeAPICall(extraChargeAPI, function (response2) {
                     const extraCharge = response2;
@@ -717,7 +717,7 @@
             var senderAddress = document.getElementById("sender_longitude").value;
             // Additional: Call the next API with POST method
             const placeOrderAPI =
-                "https://www.chelpanyoung1234.click/api/v1/customer/order/place";
+                "https://www.foodie-mandalay.click/api/v1/customer/order/place";
 
             const orderPayload = {
                 cart: [],
