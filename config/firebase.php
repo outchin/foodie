@@ -159,7 +159,7 @@ return [
                  * Use a proxy that all API requests should be passed through.
                  * (default: none)
                  */
-                'proxy' => env('FIREBASE_HTTP_CLIENT_PROXY', null),
+                'proxy' => env('a', null),
 
                 /**
                  * Set the maximum amount of seconds (float) that can pass before

@@ -39,17 +39,6 @@ class ParcelCategoryController extends Controller
         //
     }
 
-    public function create_order()
-    {
-        $module_id = Config::get('module.current_module_id');
-        $parcel_categories = ParcelCategory::
-        when($module_id, function($query)use($module_id){
-            $query->Module($module_id);
-        })
-            ->orderBy('name')->paginate(config('default_pagination'));
-        return view('admin-views.business-settings.create-order',compact('parcel_categories'));
-//        return view('admin-views.parcel.category.index',compact('parcel_categories'));
-    }
     /**
      * Store a newly created resource in storage.
      *

@@ -35,8 +35,8 @@
                                    id="layoutSkinsRadio1" checked value="default">
                             <label class="custom-checkbox-card-label" for="layoutSkinsRadio1">
                                 <img class="custom-checkbox-card-img"
-                                     src="{{asset('/assets/admin')}}/svg/layouts/layouts-sidebar-default.svg"
-                                     alt="Image Description11">
+                                     src="{{asset('public/assets/admin')}}/svg/layouts/layouts-sidebar-default.svg"
+                                     alt="Image Description">
                             </label>
                             <span class="custom-checkbox-card-text">Default</span>
                         </div>

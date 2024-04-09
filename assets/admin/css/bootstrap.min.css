@@ -3,8 +3,6 @@
  * Copyright 2011-2020 The Bootstrap Authors
  * Copyright 2011-2020 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
- zg and psp
- */
  /* */
 :root {
     --blue: #00868f;
@@ -174,7 +172,7 @@ sup {
 }
 
 a {
-    color: #303f9f;
+    color: #00868f;
     text-decoration: none;
     background-color: transparent;
 }
@@ -6709,13 +6707,13 @@ a.badge-dark:focus {
     font-size: 1.09375rem;
     font-weight: 600;
     line-height: 1;
-    color: #c5cae9;
+    color: #71869d;
     text-shadow: 0 1px 0 #fff;
     opacity: 0.5;
 }
 
 .close:hover {
-    color: #c5cae9;
+    color: #71869d;
     text-decoration: none;
 }
 

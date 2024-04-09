@@ -51,54 +51,54 @@
                         </div>
                         <!-- End Search -->
                     </form>
-{{--                    <!-- Unfold -->--}}
-{{--                    <div class="hs-unfold mr-2">--}}
-{{--                        <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle h--45px min-height-40" href="javascript:;"--}}
-{{--                            data-hs-unfold-options='{--}}
-{{--                                    "target": "#usersExportDropdown",--}}
-{{--                                    "type": "css-animation"--}}
-{{--                                }'>--}}
-{{--                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}--}}
-{{--                        </a>--}}
+                    <!-- Unfold -->
+                    <div class="hs-unfold mr-2">
+                        <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle h--45px min-height-40" href="javascript:;"
+                            data-hs-unfold-options='{
+                                    "target": "#usersExportDropdown",
+                                    "type": "css-animation"
+                                }'>
+                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                        </a>
 
-{{--                        <div id="usersExportDropdown"--}}
-{{--                            class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">--}}
-{{--                            --}}{{-- <span class="dropdown-header">{{ translate('messages.options') }}</span>--}}
-{{--                            <a id="export-copy" class="dropdown-item" href="javascript:;">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"--}}
-{{--                                    alt="Image Description">--}}
-{{--                                {{ translate('messages.copy') }}--}}
-{{--                            </a>--}}
-{{--                            <a id="export-print" class="dropdown-item" href="javascript:;">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"--}}
-{{--                                    alt="Image Description">--}}
-{{--                                {{ translate('messages.print') }}--}}
-{{--                            </a>--}}
-{{--                            <div class="dropdown-divider"></div> --}}
-{{--                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>--}}
-{{--                            <a id="export-excel" class="dropdown-item" href="{{route('admin.users.delivery-man.export', ['type'=>'excel',request()->getQueryString()])}}">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                    src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"--}}
-{{--                                    alt="Image Description">--}}
-{{--                                {{ translate('messages.excel') }}--}}
-{{--                            </a>--}}
-{{--                            <a id="export-csv" class="dropdown-item" href="{{route('admin.users.delivery-man.export', ['type'=>'csv',request()->getQueryString()])}}">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                    src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"--}}
-{{--                                    alt="Image Description">--}}
-{{--                                .{{ translate('messages.csv') }}--}}
-{{--                            </a>--}}
-{{--                            --}}{{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                    src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"--}}
-{{--                                    alt="Image Description">--}}
-{{--                                {{ translate('messages.pdf') }}--}}
-{{--                            </a> --}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <!-- End Unfold -->--}}
+                        <div id="usersExportDropdown"
+                            class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
+                            {{-- <span class="dropdown-header">{{ translate('messages.options') }}</span>
+                            <a id="export-copy" class="dropdown-item" href="javascript:;">
+                                <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"
+                                    alt="Image Description">
+                                {{ translate('messages.copy') }}
+                            </a>
+                            <a id="export-print" class="dropdown-item" href="javascript:;">
+                                <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"
+                                    alt="Image Description">
+                                {{ translate('messages.print') }}
+                            </a>
+                            <div class="dropdown-divider"></div> --}}
+                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                            <a id="export-excel" class="dropdown-item" href="{{route('admin.users.delivery-man.export', ['type'=>'excel',request()->getQueryString()])}}">
+                                <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                    src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
+                                    alt="Image Description">
+                                {{ translate('messages.excel') }}
+                            </a>
+                            <a id="export-csv" class="dropdown-item" href="{{route('admin.users.delivery-man.export', ['type'=>'csv',request()->getQueryString()])}}">
+                                <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                    src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                    alt="Image Description">
+                                .{{ translate('messages.csv') }}
+                            </a>
+                            {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
+                                <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                    src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
+                                    alt="Image Description">
+                                {{ translate('messages.pdf') }}
+                            </a> --}}
+                        </div>
+                    </div>
+                    <!-- End Unfold -->
                 </div>
             </div>
             <!-- End Header -->

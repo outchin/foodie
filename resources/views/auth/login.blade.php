@@ -21,7 +21,7 @@
     <title>{{translate('messages.login')}}</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{asset('public/assets/logo/logo.png')}}">
+    <link rel="shortcut icon" href="https://d20jjxed5popc9.cloudfront.net/assets/landing/img/favicon.svg">
 
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
@@ -34,6 +34,14 @@
     <link rel="stylesheet" href="{{asset('public/assets/admin/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('public/assets/admin')}}/css/toastr.css">
 
+{{--    <link rel="stylesheet" href="https://d20jjxed5popc9.cloudfront.net/assets/admin/css/vendor.min.css">--}}
+{{--    <link rel="stylesheet" href="https://d20jjxed5popc9.cloudfront.net/assets/admin/vendor/icon-set/style.css">--}}
+{{--    <!-- CSS Front Template -->--}}
+{{--    <link rel="stylesheet" href="https://d20jjxed5popc9.cloudfront.net/assets/admin/css/bootstrap.min.css">--}}
+{{--    <link rel="stylesheet" href="https://d20jjxed5popc9.cloudfront.net/assets/admin/css/theme.minc619.css?v=1.0">--}}
+{{--    <link rel="stylesheet" href="https://d20jjxed5popc9.cloudfront.net/assets/admin/css/style.css">--}}
+{{--    <link rel="stylesheet" href="https://d20jjxed5popc9.cloudfront.net/assets/admin/css/toastr.css">--}}
+
 </head>
 
 <body>
@@ -44,8 +52,8 @@
             <div class="auth-left-cont">
                 @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value)
 {{--                <img onerror="this.src='{{asset('/public/assets/admin/img/favicon.png')}}'" src="{{ asset('storage/app/public/business/' . $store_logo) }}" alt="public/img">--}}
-                <img  src="{{asset('public/assets/logo/logo.png')}}" alt="public/img">
-                <h2 class="title">Project<span class="d-block">Foodie</span> <strong class="text--039D55">Fast & Free</strong></h2>
+                <img  src="https://d20jjxed5popc9.cloudfront.net/assets/landing/img/favicon.svg" alt="public/img">
+                <h2 class="title">{{translate('Your')}} <span class="d-block">{{translate('All Service')}}</span> <strong class="text--039D55">{{translate('in one field')}}....</strong></h2>
             </div>
         </div>
         <div class="auth-wrapper-right">

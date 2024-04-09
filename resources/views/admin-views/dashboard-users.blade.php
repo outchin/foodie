@@ -40,22 +40,22 @@
         <!-- End Page Header -->
 
         <div class="row g-2 pb-4 mb-0">
-{{--            <div class="col-sm-6 col-lg-4">--}}
-{{--                <div class="__user-dashboard-card">--}}
-{{--                    <div class="__user-dashboard-card-thumbs">--}}
-{{--                        @php($total_customers = $blocked_customers + $active_customers)--}}
-{{--                        <div class="more-icon">--}}
-{{--                            +{{$total_customers >= 4 ? $total_customers - 2 : $total_customers}}--}}
-{{--                        </div>--}}
-{{--                        @foreach ($customers as $key => $customer)--}}
-{{--                            <img src="{{ asset('storage/app/public/profile') }}/{{ $customer['image'] }}"--}}
-{{--                            onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'" alt="new-img">--}}
-{{--                        @endforeach --}}
-{{--                    </div>--}}
-{{--                    <h3 class="title">{{$total_customers}}</h3>--}}
-{{--                    <h5 class="subtitle text-capitalize">{{translate('messages.total_customer')}}</h5>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            <div class="col-sm-6 col-lg-4">
+                <div class="__user-dashboard-card">
+                    <div class="__user-dashboard-card-thumbs">
+                        @php($total_customers = $blocked_customers + $active_customers)
+                        <div class="more-icon">
+                            +{{$total_customers >= 4 ? $total_customers - 2 : $total_customers}}
+                        </div>
+                        @foreach ($customers as $key => $customer)
+                            <img src="{{ asset('storage/app/public/profile') }}/{{ $customer['image'] }}"
+                            onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'" alt="new-img">
+                        @endforeach 
+                    </div>
+                    <h3 class="title">{{$total_customers}}</h3>
+                    <h5 class="subtitle text-capitalize">{{translate('messages.total_customer')}}</h5>
+                </div>
+            </div>
             <div class="col-sm-6 col-lg-4">
                 <div class="__user-dashboard-card" style="--theme-clr:#006AB4">
                     <div class="__user-dashboard-card-thumbs">
@@ -72,249 +72,249 @@
                     <h5 class="subtitle text-capitalize">{{translate('messages.total_delivery_man')}}</h5>
                 </div>
             </div>
-{{--            <div class="col-sm-6 col-lg-4">--}}
-{{--                <div class="__user-dashboard-card" style="--theme-clr:#FFA800">--}}
-{{--                    <div class="__user-dashboard-card-thumbs">--}}
-{{--                        @php($total_employees = $employees->count())--}}
-{{--                        <div class="more-icon">--}}
-{{--                            +{{$total_employees >= 4 ? $total_employees - 2 : $total_employees}}--}}
-{{--                        </div>--}}
-{{--                        @foreach ($employees as $key => $item)--}}
-{{--                        @if ($key == 2)--}}
-{{--                            @break--}}
-{{--                        @endif--}}
-{{--                        <img src="{{ asset('storage/app/public/delivery-man') }}/{{ $item['image'] }}"--}}
-{{--                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'" alt="new-img">--}}
-{{--                        @endforeach--}}
-{{--                    </div>--}}
-{{--                    <h3 class="title">{{$total_employees}}</h3>--}}
-{{--                    <h5 class="subtitle text-capitalize">{{translate('messages.total_employee')}}</h5>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            <div class="col-sm-6 col-lg-4">
+                <div class="__user-dashboard-card" style="--theme-clr:#FFA800">
+                    <div class="__user-dashboard-card-thumbs">
+                        @php($total_employees = $employees->count())
+                        <div class="more-icon">
+                            +{{$total_employees >= 4 ? $total_employees - 2 : $total_employees}}
+                        </div>
+                        @foreach ($employees as $key => $item)
+                        @if ($key == 2)
+                            @break
+                        @endif
+                        <img src="{{ asset('storage/app/public/delivery-man') }}/{{ $item['image'] }}"
+                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'" alt="new-img">
+                        @endforeach
+                    </div>
+                    <h3 class="title">{{$total_employees}}</h3>
+                    <h5 class="subtitle text-capitalize">{{translate('messages.total_employee')}}</h5>
+                </div>
+            </div>
         </div>
 
-{{--        <h4 class="mb-md-3">{{ translate('Customer Statistics') }}</h4>--}}
+        <h4 class="mb-md-3">{{ translate('Customer Statistics') }}</h4>
 
-{{--        <div class="row g-2 pb-4 mb-0">--}}
-{{--            <div class="col-lg-8">--}}
-{{--                <div class="row g-2">--}}
-{{--                    <div class="col-md-4">--}}
-{{--                        <div class="row gap__10">--}}
-{{--                            <div class="col-md-12 col-sm-6">--}}
-{{--                                <div class="__customer-statistics-card">--}}
-{{--                                    <div class="title">--}}
-{{--                                        <img src="{{asset('/public/assets/admin/img/new-img/customer/active.svg')}}" alt="new-img">--}}
-{{--                                        <h4>{{$active_customers}}</h4>--}}
-{{--                                    </div>--}}
-{{--                                    <h4 class="subtitle text-capitalize">{{translate('messages.active_customer')}}</h4>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                            <div class="col-md-12 col-sm-6">--}}
-{{--                                <div class="__customer-statistics-card" style="--clr:#006AB4">--}}
-{{--                                    <div class="title">--}}
-{{--                                        <img src="{{asset('/public/assets/admin/img/new-img/customer/newly.svg')}}" alt="new-img">--}}
-{{--                                        <h4>{{$newly_joined}}</h4>--}}
-{{--                                    </div>--}}
-{{--                                    <h4 class="subtitle text-capitalize">{{translate('messages.newly_joined')}}</h4>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                            <div class="col-md-12 col-sm-6">--}}
-{{--                                <div class="__customer-statistics-card" style="--clr:#FF5A54">--}}
-{{--                                    <div class="title">--}}
-{{--                                        <img src="{{asset('/public/assets/admin/img/new-img/customer/blocked.svg')}}" alt="new-img">--}}
-{{--                                        <h4>{{$blocked_customers}}</h4>--}}
-{{--                                    </div>--}}
-{{--                                    <h4 class="subtitle text-capitalize">{{translate('messages.blocked_customer')}}</h4>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="col-md-8">--}}
-{{--                        <div class="card h-100">--}}
-{{--                            <div class="card-body pb-0">--}}
-{{--                                <div class="d-flex flex-wrap justify-content-between align-items-center __gap-12px">--}}
-{{--                                    <div class="__gross-amount">--}}
-{{--                                        --}}{{-- <h6>$855.8K</h6> --}}
-{{--                                        <span class="text-capitalize">{{translate('messages.customer_growth')}}</span>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="chart--label __chart-label p-0 ml-auto">--}}
-{{--                                        <span class="indicator chart-bg-2"></span>--}}
-{{--                                        <span class="info">--}}
-{{--                                            <span>{{translate('messages.this_year')}}</span> ({{ now()->year }})--}}
-{{--                                        </span>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <div id="customer-growth-chart"></div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--            <div class="col-lg-4">--}}
-{{--                <div class="__customer-satisfaction">--}}
-{{--                    <div class="px-2">--}}
-{{--                        <div class="d-flex align-items-center justify-content-between">--}}
-{{--                            <h5 class="subtitle text-capitalize">{{translate('messages.customer_satisfaction')}}</h5>--}}
-{{--                            <img src="{{asset('/public/assets/admin/img/new-img/satisfactions.png')}}" alt="new-img">--}}
-{{--                        </div>--}}
-{{--                        <div class="px-sm-2">--}}
-{{--                            <h4 class="review-count">{{$reviews}}</h4>--}}
-{{--                            <span class="review-received text-capitalize">{{translate('messages.review_received')}}</span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <ul class="__customer-review">--}}
-{{--                        <li>--}}
-{{--                            <span class="tag">{{ translate('Positive') }}</span>--}}
-{{--                            @php($positive_parcent = $positive_reviews > 0 ? round($positive_reviews / $reviews * 100) : 0)--}}
-{{--                            <span class="review">--}}
-{{--                                <i class="tio-user-big" @if ($positive_parcent >= 5 )--}}
-{{--                                    style="--clr:#00AA6D;"--}}
-{{--                                @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($positive_parcent >= 20 )--}}
-{{--                                    style="--clr:#00AA6D;"--}}
-{{--                                @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($positive_parcent >= 30 )--}}
-{{--                                        style="--clr:#00AA6D;"--}}
-{{--                                    @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($positive_parcent >= 40 )--}}
-{{--                                        style="--clr:#00AA6D;"--}}
-{{--                                    @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($positive_parcent >= 50 )--}}
-{{--                                    style="--clr:#00AA6D;"--}}
-{{--                                @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($positive_parcent >= 60 )--}}
-{{--                                style="--clr:#00AA6D;"--}}
-{{--                            @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($positive_parcent >= 70 )--}}
-{{--                                style="--clr:#00AA6D;"--}}
-{{--                            @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($positive_parcent >= 80 )--}}
-{{--                                style="--clr:#00AA6D;"--}}
-{{--                            @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($positive_parcent >= 87 )--}}
-{{--                                style="--clr:#00AA6D;"--}}
-{{--                            @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($positive_parcent >= 95 )--}}
-{{--                                style="--clr:#00AA6D;"--}}
-{{--                            @endif></i>--}}
-{{--                            </span>--}}
-{{--                            <span class="ratio">{{$positive_parcent}}%</span>--}}
-{{--                        </li>--}}
-{{--                        <li>--}}
-{{--                            <span class="tag">{{ translate('Good') }}</span>--}}
-{{--                            @php($good_parcent = $good_reviews > 0 ? round($good_reviews / $reviews * 100) : 0)--}}
-{{--                                <span class="review">--}}
-{{--                                    <i class="tio-user-big" @if ($good_parcent >= 5 )--}}
-{{--                                        style="--clr:#FEB019;"--}}
-{{--                                    @endif></i>--}}
-{{--                                    <i class="tio-user-big" @if ($good_parcent >= 20 )--}}
-{{--                                        style="--clr:#FEB019;"--}}
-{{--                                    @endif></i>--}}
-{{--                                    <i class="tio-user-big" @if ($good_parcent >= 30 )--}}
-{{--                                            style="--clr:#FEB019;"--}}
-{{--                                        @endif></i>--}}
-{{--                                    <i class="tio-user-big" @if ($good_parcent >= 40 )--}}
-{{--                                            style="--clr:#FEB019;"--}}
-{{--                                        @endif></i>--}}
-{{--                                    <i class="tio-user-big" @if ($good_parcent >= 50 )--}}
-{{--                                        style="--clr:#FEB019;"--}}
-{{--                                    @endif></i>--}}
-{{--                                    <i class="tio-user-big" @if ($good_parcent >= 60 )--}}
-{{--                                            style="--clr:#FEB019;"--}}
-{{--                                        @endif></i>--}}
-{{--                                    <i class="tio-user-big" @if ($good_parcent >= 70 )--}}
-{{--                                    style="--clr:#FEB019;"--}}
-{{--                                    @endif></i>--}}
-{{--                                    <i class="tio-user-big" @if ($good_parcent >= 80 )--}}
-{{--                                    style="--clr:#FEB019;"--}}
-{{--                                        @endif></i>--}}
-{{--                                        <i class="tio-user-big" @if ($good_parcent >= 87 )--}}
-{{--                                    style="--clr:#FEB019;"--}}
-{{--                                     @endif></i>--}}
-{{--                                    <i class="tio-user-big" @if ($good_parcent >= 95 )--}}
-{{--                                    style="--clr:#FEB019;"--}}
-{{--                                    @endif></i>--}}
-{{--                                </span>--}}
-{{--                            <span class="ratio">{{$good_parcent}}%</span>--}}
-{{--                        </li>--}}
-{{--                        <li>--}}
-{{--                            <span class="tag">{{ translate('Neutral') }}</span>--}}
-{{--                            @php($neutral_parcent = $neutral_reviews > 0 ? round($neutral_reviews / $reviews * 100) : 0)--}}
-{{--                            <span class="review">--}}
-{{--                                <i class="tio-user-big" @if ($neutral_parcent >= 5 )--}}
-{{--                                    style="--clr:#0177CD;"--}}
-{{--                                @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($neutral_parcent >= 20 )--}}
-{{--                                    style="--clr:#0177CD;"--}}
-{{--                                @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($neutral_parcent >= 30 )--}}
-{{--                                        style="--clr:#0177CD;"--}}
-{{--                                    @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($neutral_parcent >= 40 )--}}
-{{--                                        style="--clr:#0177CD;"--}}
-{{--                                    @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($neutral_parcent >= 50 )--}}
-{{--                                    style="--clr:#0177CD;"--}}
-{{--                                @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($neutral_parcent >= 60 )--}}
-{{--                                        style="--clr:#0177CD;"--}}
-{{--                                    @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($neutral_parcent >= 70 )--}}
-{{--                                style="--clr:#0177CD;"--}}
-{{--                                @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($neutral_parcent >= 80 )--}}
-{{--                                style="--clr:#0177CD;"--}}
-{{--                                    @endif></i>--}}
-{{--                                    <i class="tio-user-big" @if ($neutral_parcent >= 87 )--}}
-{{--                                style="--clr:#0177CD;"--}}
-{{--                                 @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($neutral_parcent >= 95 )--}}
-{{--                                style="--clr:#0177CD;"--}}
-{{--                                @endif></i>--}}
-{{--                            </span>--}}
-{{--                            <span class="ratio">{{$neutral_parcent}}%</span>--}}
-{{--                        </li>--}}
-{{--                        <li>--}}
-{{--                            <span class="tag">{{ translate('Negetive') }}</span>--}}
-{{--                            @php($negative_percent = $negative_reviews > 0 ? round($negative_reviews / $reviews * 100) : 0)--}}
-{{--                            <span class="review">--}}
-{{--                                <i class="tio-user-big" @if ($negative_percent >= 5 )--}}
-{{--                                    style="--clr:#FF7E7E;"--}}
-{{--                                @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($negative_percent >= 20 )--}}
-{{--                                    style="--clr:#FF7E7E;"--}}
-{{--                                @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($negative_percent >= 30 )--}}
-{{--                                        style="--clr:#FF7E7E;"--}}
-{{--                                    @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($negative_percent >= 40 )--}}
-{{--                                        style="--clr:#FF7E7E;"--}}
-{{--                                    @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($negative_percent >= 50 )--}}
-{{--                                    style="--clr:#FF7E7E;"--}}
-{{--                                @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($negative_percent >= 60 )--}}
-{{--                                        style="--clr:#FF7E7E;"--}}
-{{--                                    @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($negative_percent >= 70 )--}}
-{{--                                style="--clr:#FF7E7E;"--}}
-{{--                                @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($negative_percent >= 80 )--}}
-{{--                                style="--clr:#FF7E7E;"--}}
-{{--                                    @endif></i>--}}
-{{--                                    <i class="tio-user-big" @if ($negative_percent >= 87 )--}}
-{{--                                style="--clr:#FF7E7E;"--}}
-{{--                                 @endif></i>--}}
-{{--                                <i class="tio-user-big" @if ($negative_percent >= 95 )--}}
-{{--                                style="--clr:#FF7E7E;"--}}
-{{--                                @endif></i>--}}
-{{--                            </span>--}}
-{{--                            <span class="ratio">{{$negative_percent}}%</span>--}}
-{{--                        </li>--}}
-{{--                    </ul>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
+        <div class="row g-2 pb-4 mb-0">
+            <div class="col-lg-8">
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <div class="row gap__10">
+                            <div class="col-md-12 col-sm-6">
+                                <div class="__customer-statistics-card">
+                                    <div class="title">
+                                        <img src="{{asset('/public/assets/admin/img/new-img/customer/active.svg')}}" alt="new-img">
+                                        <h4>{{$active_customers}}</h4>
+                                    </div>
+                                    <h4 class="subtitle text-capitalize">{{translate('messages.active_customer')}}</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-6">
+                                <div class="__customer-statistics-card" style="--clr:#006AB4">
+                                    <div class="title">
+                                        <img src="{{asset('/public/assets/admin/img/new-img/customer/newly.svg')}}" alt="new-img">
+                                        <h4>{{$newly_joined}}</h4>
+                                    </div>
+                                    <h4 class="subtitle text-capitalize">{{translate('messages.newly_joined')}}</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-6">
+                                <div class="__customer-statistics-card" style="--clr:#FF5A54">
+                                    <div class="title">
+                                        <img src="{{asset('/public/assets/admin/img/new-img/customer/blocked.svg')}}" alt="new-img">
+                                        <h4>{{$blocked_customers}}</h4>
+                                    </div>
+                                    <h4 class="subtitle text-capitalize">{{translate('messages.blocked_customer')}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card h-100">
+                            <div class="card-body pb-0">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center __gap-12px">
+                                    <div class="__gross-amount">
+                                        {{-- <h6>$855.8K</h6> --}}
+                                        <span class="text-capitalize">{{translate('messages.customer_growth')}}</span>
+                                    </div>
+                                    <div class="chart--label __chart-label p-0 ml-auto">
+                                        <span class="indicator chart-bg-2"></span>
+                                        <span class="info">
+                                            <span>{{translate('messages.this_year')}}</span> ({{ now()->year }})
+                                        </span>
+                                    </div>
+                                </div>
+                                <div id="customer-growth-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="__customer-satisfaction">
+                    <div class="px-2">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h5 class="subtitle text-capitalize">{{translate('messages.customer_satisfaction')}}</h5>
+                            <img src="{{asset('/public/assets/admin/img/new-img/satisfactions.png')}}" alt="new-img">
+                        </div>
+                        <div class="px-sm-2">
+                            <h4 class="review-count">{{$reviews}}</h4>
+                            <span class="review-received text-capitalize">{{translate('messages.review_received')}}</span>
+                        </div>
+                    </div>
+                    <ul class="__customer-review">
+                        <li>
+                            <span class="tag">{{ translate('Positive') }}</span>
+                            @php($positive_parcent = $positive_reviews > 0 ? round($positive_reviews / $reviews * 100) : 0)
+                            <span class="review">
+                                <i class="tio-user-big" @if ($positive_parcent >= 5 )
+                                    style="--clr:#00AA6D;"
+                                @endif></i>
+                                <i class="tio-user-big" @if ($positive_parcent >= 20 )
+                                    style="--clr:#00AA6D;"
+                                @endif></i>
+                                <i class="tio-user-big" @if ($positive_parcent >= 30 )
+                                        style="--clr:#00AA6D;"
+                                    @endif></i>
+                                <i class="tio-user-big" @if ($positive_parcent >= 40 )
+                                        style="--clr:#00AA6D;"
+                                    @endif></i>
+                                <i class="tio-user-big" @if ($positive_parcent >= 50 )
+                                    style="--clr:#00AA6D;"
+                                @endif></i>
+                                <i class="tio-user-big" @if ($positive_parcent >= 60 )
+                                style="--clr:#00AA6D;"
+                            @endif></i>
+                                <i class="tio-user-big" @if ($positive_parcent >= 70 )
+                                style="--clr:#00AA6D;"
+                            @endif></i>
+                                <i class="tio-user-big" @if ($positive_parcent >= 80 )
+                                style="--clr:#00AA6D;"
+                            @endif></i>
+                                <i class="tio-user-big" @if ($positive_parcent >= 87 )
+                                style="--clr:#00AA6D;"
+                            @endif></i>
+                                <i class="tio-user-big" @if ($positive_parcent >= 95 )
+                                style="--clr:#00AA6D;"
+                            @endif></i>
+                            </span>
+                            <span class="ratio">{{$positive_parcent}}%</span>
+                        </li>
+                        <li>
+                            <span class="tag">{{ translate('Good') }}</span>
+                            @php($good_parcent = $good_reviews > 0 ? round($good_reviews / $reviews * 100) : 0)
+                                <span class="review">
+                                    <i class="tio-user-big" @if ($good_parcent >= 5 )
+                                        style="--clr:#FEB019;"
+                                    @endif></i>
+                                    <i class="tio-user-big" @if ($good_parcent >= 20 )
+                                        style="--clr:#FEB019;"
+                                    @endif></i>
+                                    <i class="tio-user-big" @if ($good_parcent >= 30 )
+                                            style="--clr:#FEB019;"
+                                        @endif></i>
+                                    <i class="tio-user-big" @if ($good_parcent >= 40 )
+                                            style="--clr:#FEB019;"
+                                        @endif></i>
+                                    <i class="tio-user-big" @if ($good_parcent >= 50 )
+                                        style="--clr:#FEB019;"
+                                    @endif></i>
+                                    <i class="tio-user-big" @if ($good_parcent >= 60 )
+                                            style="--clr:#FEB019;"
+                                        @endif></i>
+                                    <i class="tio-user-big" @if ($good_parcent >= 70 )
+                                    style="--clr:#FEB019;"
+                                    @endif></i>
+                                    <i class="tio-user-big" @if ($good_parcent >= 80 )
+                                    style="--clr:#FEB019;"
+                                        @endif></i>
+                                        <i class="tio-user-big" @if ($good_parcent >= 87 )
+                                    style="--clr:#FEB019;"
+                                     @endif></i>
+                                    <i class="tio-user-big" @if ($good_parcent >= 95 )
+                                    style="--clr:#FEB019;"
+                                    @endif></i>
+                                </span>
+                            <span class="ratio">{{$good_parcent}}%</span>
+                        </li>
+                        <li>
+                            <span class="tag">{{ translate('Neutral') }}</span>
+                            @php($neutral_parcent = $neutral_reviews > 0 ? round($neutral_reviews / $reviews * 100) : 0)
+                            <span class="review">
+                                <i class="tio-user-big" @if ($neutral_parcent >= 5 )
+                                    style="--clr:#0177CD;"
+                                @endif></i>
+                                <i class="tio-user-big" @if ($neutral_parcent >= 20 )
+                                    style="--clr:#0177CD;"
+                                @endif></i>
+                                <i class="tio-user-big" @if ($neutral_parcent >= 30 )
+                                        style="--clr:#0177CD;"
+                                    @endif></i>
+                                <i class="tio-user-big" @if ($neutral_parcent >= 40 )
+                                        style="--clr:#0177CD;"
+                                    @endif></i>
+                                <i class="tio-user-big" @if ($neutral_parcent >= 50 )
+                                    style="--clr:#0177CD;"
+                                @endif></i>
+                                <i class="tio-user-big" @if ($neutral_parcent >= 60 )
+                                        style="--clr:#0177CD;"
+                                    @endif></i>
+                                <i class="tio-user-big" @if ($neutral_parcent >= 70 )
+                                style="--clr:#0177CD;"
+                                @endif></i>
+                                <i class="tio-user-big" @if ($neutral_parcent >= 80 )
+                                style="--clr:#0177CD;"
+                                    @endif></i>
+                                    <i class="tio-user-big" @if ($neutral_parcent >= 87 )
+                                style="--clr:#0177CD;"
+                                 @endif></i>
+                                <i class="tio-user-big" @if ($neutral_parcent >= 95 )
+                                style="--clr:#0177CD;"
+                                @endif></i>
+                            </span>
+                            <span class="ratio">{{$neutral_parcent}}%</span>
+                        </li>
+                        <li>
+                            <span class="tag">{{ translate('Negetive') }}</span>
+                            @php($negative_percent = $negative_reviews > 0 ? round($negative_reviews / $reviews * 100) : 0)
+                            <span class="review">
+                                <i class="tio-user-big" @if ($negative_percent >= 5 )
+                                    style="--clr:#FF7E7E;"
+                                @endif></i>
+                                <i class="tio-user-big" @if ($negative_percent >= 20 )
+                                    style="--clr:#FF7E7E;"
+                                @endif></i>
+                                <i class="tio-user-big" @if ($negative_percent >= 30 )
+                                        style="--clr:#FF7E7E;"
+                                    @endif></i>
+                                <i class="tio-user-big" @if ($negative_percent >= 40 )
+                                        style="--clr:#FF7E7E;"
+                                    @endif></i>
+                                <i class="tio-user-big" @if ($negative_percent >= 50 )
+                                    style="--clr:#FF7E7E;"
+                                @endif></i>
+                                <i class="tio-user-big" @if ($negative_percent >= 60 )
+                                        style="--clr:#FF7E7E;"
+                                    @endif></i>
+                                <i class="tio-user-big" @if ($negative_percent >= 70 )
+                                style="--clr:#FF7E7E;"
+                                @endif></i>
+                                <i class="tio-user-big" @if ($negative_percent >= 80 )
+                                style="--clr:#FF7E7E;"
+                                    @endif></i>
+                                    <i class="tio-user-big" @if ($negative_percent >= 87 )
+                                style="--clr:#FF7E7E;"
+                                 @endif></i>
+                                <i class="tio-user-big" @if ($negative_percent >= 95 )
+                                style="--clr:#FF7E7E;"
+                                @endif></i>
+                            </span>
+                            <span class="ratio">{{$negative_percent}}%</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <h4 class="mb-md-3">{{ translate('Deliveryman Statistics') }}</h4>
         <div class="row g-2">
             <div class="col-lg-8">
@@ -347,21 +347,21 @@
                         </div>
                     </div>
                 </div>
-{{--                <div class="__map-wrapper-2 mt-3">--}}
-{{--                    <div class="map-pop-deliveryman">--}}
-{{--                        <form action="javascript:" id="search-form" class="map-pop-deliveryman-inner">--}}
-{{--                            <label>{{ translate('Currently Active Delivery Men') }} </label>--}}
-{{--                            <div class="position-relative mx-auto">--}}
-{{--                                <i class="tio-search"></i>--}}
-{{--                                <input type="text" name="search" class="form-control" placeholder="{{translate('Search Delivery Man ...')}}">--}}
-{{--                            </div>--}}
-{{--                            <a href="{{ route('admin.users.delivery-man.list') }}" class="link">{{ translate('View All Delivery Men') }}</a>--}}
-{{--                        </form>--}}
-{{--                    </div>--}}
-{{--                    <div class="map-warper map-wrapper-2 rounded">--}}
-{{--                        <div id="map-canvas" class="rounded"></div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
+                <div class="__map-wrapper-2 mt-3">
+                    <div class="map-pop-deliveryman">
+                        <form action="javascript:" id="search-form" class="map-pop-deliveryman-inner">
+                            <label>{{ translate('Currently Active Delivery Men') }} </label>
+                            <div class="position-relative mx-auto">
+                                <i class="tio-search"></i>
+                                <input type="text" name="search" class="form-control" placeholder="{{translate('Search Delivery Man ...')}}">
+                            </div>
+                            <a href="{{ route('admin.users.delivery-man.list') }}" class="link">{{ translate('View All Delivery Men') }}</a>
+                        </form>
+                    </div>
+                    <div class="map-warper map-wrapper-2 rounded">
+                        <div id="map-canvas" class="rounded"></div>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-4">
                 <div class="card h-100" id="top-deliveryman-view">

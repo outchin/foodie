@@ -37,7 +37,7 @@ class LoginController extends Controller
         $this->middleware('guest:admin,vendor', ['except' => 'logout']);
     }
 
-    public function login($login_url = "admin")
+    public function login($login_url)
     {
         $data=array_column(DataSetting::whereIn('key',['store_employee_login_url','store_login_url','admin_employee_login_url','admin_login_url'
         ])->get(['key','value'])->toArray(), 'value', 'key');
@@ -80,6 +80,7 @@ class LoginController extends Controller
             $email = Crypt::decryptString(Cookie::get('e_token'));
             $password = Crypt::decryptString(Cookie::get('p_token'));
         }
+
         return view('auth.login', compact('custome_recaptcha','email','password','role','site_direction','locale'));
     }
 

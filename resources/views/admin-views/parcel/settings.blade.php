@@ -30,26 +30,26 @@
         @php($parcel_commission_dm=\App\Models\BusinessSetting::where(['key'=>'parcel_commission_dm'])->first())
         @php($parcel_commission_dm=$parcel_commission_dm?$parcel_commission_dm->value:null)
 
-        <div class="card" >
+        <div class="card">
             <div class="card-body">
                 <form action="{{route('admin.parcel.update.settings')}}" method="post"
                     enctype="multipart/form-data">
                     @csrf
                     <div class="row">
-{{--                        <div class="col-md-6 col-lg-4">--}}
-{{--                            <div class="form-group">--}}
-{{--                                <label  class="input-label text-capitalize">{{translate('messages.per_km_shipping_charge')}}</label>--}}
-{{--                                <input type="number" step=".01" placeholder="{{translate('messages.per_km_shipping_charge')}}" class="form-control" name="parcel_per_km_shipping_charge"--}}
-{{--                                    value="{{env('APP_MODE')!='demo'?$parcel_per_km_shipping_charge??'':''}}">--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <div class="col-md-6 col-lg-4">--}}
-{{--                            <div class="form-group">--}}
-{{--                                <label class="input-label text-capitalize">{{translate('messages.minimum_shipping_charge')}}</label>--}}
-{{--                                <input type="number" step=".01" placeholder="{{translate('messages.minimum_shipping_charge')}}" class="form-control" name="parcel_minimum_shipping_charge"--}}
-{{--                                    value="{{env('APP_MODE')!='demo'?$parcel_minimum_shipping_charge??'':''}}">--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label  class="input-label text-capitalize">{{translate('messages.per_km_shipping_charge')}}</label>
+                                <input type="number" step=".01" placeholder="{{translate('messages.per_km_shipping_charge')}}" class="form-control" name="parcel_per_km_shipping_charge"
+                                    value="{{env('APP_MODE')!='demo'?$parcel_per_km_shipping_charge??'':''}}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <label class="input-label text-capitalize">{{translate('messages.minimum_shipping_charge')}}</label>
+                                <input type="number" step=".01" placeholder="{{translate('messages.minimum_shipping_charge')}}" class="form-control" name="parcel_minimum_shipping_charge"
+                                    value="{{env('APP_MODE')!='demo'?$parcel_minimum_shipping_charge??'':''}}">
+                            </div>
+                        </div>
 
                         <div class="col-md-6 col-lg-4">
                             <div class="form-group">
@@ -66,67 +66,67 @@
             </div>
         </div>
 
-{{--        <div class="col-lg-12 pt-sm-3">--}}
-{{--            <div class="report-card-inner mb-4 pt-3 mw-100">--}}
-{{--                <form action="{{route('admin.parcel.instruction')}}" method="post">--}}
-{{--                    @csrf--}}
-{{--                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-md-0 mb-3">--}}
-{{--                        <div class="mx-1">--}}
-{{--                            <h5 class="form-label mb-0">--}}
-{{--                                {{translate('messages.Add a Delivery Instruction')}}--}}
-{{--                            </h5>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    @php($language=\App\Models\BusinessSetting::where('key','language')->first())--}}
-{{--                    @php($language = $language->value ?? null)--}}
-{{--                    @php($default_lang = str_replace('_', '-', app()->getLocale()))--}}
-{{--                    @if($language)--}}
-{{--                        <ul class="nav nav-tabs nav--tabs mt-3 mb-3 ">--}}
-{{--                            <li class="nav-item">--}}
-{{--                                <a class="nav-link lang_link1 active"--}}
-{{--                                   href="#"--}}
-{{--                                   id="default-link1">{{ translate('Default') }}</a>--}}
-{{--                            </li>--}}
-{{--                            @foreach (json_decode($language) as $lang)--}}
-{{--                                <li class="nav-item">--}}
-{{--                                    <a class="nav-link lang_link1"--}}
-{{--                                       href="#"--}}
-{{--                                       id="{{ $lang }}-link1">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>--}}
-{{--                                </li>--}}
-{{--                            @endforeach--}}
-{{--                        </ul>--}}
-{{--                    @endif--}}
-{{--                    <div class="row align-items-end">--}}
+        <div class="col-lg-12 pt-sm-3">
+            <div class="report-card-inner mb-4 pt-3 mw-100">
+                <form action="{{route('admin.parcel.instruction')}}" method="post">
+                    @csrf
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-md-0 mb-3">
+                        <div class="mx-1">
+                            <h5 class="form-label mb-0">
+                                {{translate('messages.Add a Delivery Instruction')}}
+                            </h5>
+                        </div>
+                    </div>
+                    @php($language=\App\Models\BusinessSetting::where('key','language')->first())
+                    @php($language = $language->value ?? null)
+                    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+                    @if($language)
+                        <ul class="nav nav-tabs nav--tabs mt-3 mb-3 ">
+                            <li class="nav-item">
+                                <a class="nav-link lang_link1 active"
+                                   href="#"
+                                   id="default-link1">{{ translate('Default') }}</a>
+                            </li>
+                            @foreach (json_decode($language) as $lang)
+                                <li class="nav-item">
+                                    <a class="nav-link lang_link1"
+                                       href="#"
+                                       id="{{ $lang }}-link1">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                    <div class="row align-items-end">
 
 
 
-{{--                        <div class="col-md-10 lang_form1 default-form1">--}}
-{{--                            <label class="form-label">{{translate('Instruction')}} ({{ translate('Default') }})</label>--}}
-{{--                            <input type="text" class="form-control h--45px" maxlength="191" name="instruction[]"--}}
-{{--                                   placeholder="{{ translate('Ex:_parcel_contains_document') }}">--}}
-{{--                            <input type="hidden" name="lang[]" value="default">--}}
-{{--                        </div>--}}
+                        <div class="col-md-10 lang_form1 default-form1">
+                            <label class="form-label">{{translate('Instruction')}} ({{ translate('Default') }})</label>
+                            <input type="text" class="form-control h--45px" maxlength="191" name="instruction[]"
+                                   placeholder="{{ translate('Ex:_parcel_contains_document') }}">
+                            <input type="hidden" name="lang[]" value="default">
+                        </div>
 
-{{--                        @if ($language)--}}
-{{--                            @foreach(json_decode($language) as $lang)--}}
-{{--                                <div class="col-md-10 d-none lang_form1" id="{{$lang}}-form1">--}}
-{{--                                    <label class="form-label">{{translate('Instruction')}} ({{strtoupper($lang)}})</label>--}}
-{{--                                    <input type="text" class="form-control h--45px" maxlength="191" name="instruction[]"--}}
-{{--                                           placeholder="{{ translate('Ex:_parcel_contains_document') }}">--}}
-{{--                                    <input type="hidden" name="lang[]" value="{{$lang}}">--}}
-{{--                                </div>--}}
-{{--                            @endforeach--}}
-{{--                        @endif--}}
+                        @if ($language)
+                            @foreach(json_decode($language) as $lang)
+                                <div class="col-md-10 d-none lang_form1" id="{{$lang}}-form1">
+                                    <label class="form-label">{{translate('Instruction')}} ({{strtoupper($lang)}})</label>
+                                    <input type="text" class="form-control h--45px" maxlength="191" name="instruction[]"
+                                           placeholder="{{ translate('Ex:_parcel_contains_document') }}">
+                                    <input type="hidden" name="lang[]" value="{{$lang}}">
+                                </div>
+                            @endforeach
+                        @endif
 
 
-{{--                        <div class="col-md-auto">--}}
-{{--                            <button type="submit" class="btn btn--primary h--45px btn-block">{{translate('messages.Add Now')}}</button>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </form>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-        <div class="card"  style="display: none">
+                        <div class="col-md-auto">
+                            <button type="submit" class="btn btn--primary h--45px btn-block">{{translate('messages.Add Now')}}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card">
             <div class="card-body mb-3">
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-md-0 mb-3">
                     <div class="mx-1">
@@ -140,7 +140,7 @@
 
 
                 <!-- Table -->
-                <div class="card-body p-0" style="display: none">
+                <div class="card-body p-0">
                     <div class="table-responsive datatable-custom">
                         <table id="columnSearchDatatable"
                                class="table table-borderless table-thead-bordered table-align-middle" data-hs-datatables-options='{
@@ -274,16 +274,14 @@
                             @endforeach
                             </tbody>
                         </table>
-
-{{--                        @if(count($instructions) === 0)--}}
-{{--                            <div class="empty--data">--}}
-{{--                                <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">--}}
-{{--                                <h5>--}}
-{{--                                    {{translate('no_data_found')}}--}}
-{{--                                </h5>--}}
-{{--                            </div>--}}
-{{--                        @endif--}}
-
+                        @if(count($instructions) === 0)
+                            <div class="empty--data">
+                                <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                                <h5>
+                                    {{translate('no_data_found')}}
+                                </h5>
+                            </div>
+                        @endif
                     </div>
                     <div class="card-footer pt-0 border-0">
                         <div class="page-area px-4 pb-3">

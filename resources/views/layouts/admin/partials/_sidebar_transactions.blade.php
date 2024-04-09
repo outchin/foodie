@@ -39,86 +39,84 @@
                 </form>
                 <ul class="navbar-nav navbar-nav-lg nav-tabs">
                 <!-- Business Section-->
-{{--                <li class="nav-item">--}}
-{{--                    <small class="nav-subtitle" title="{{ translate('messages.business_section') }}">{{ translate('messages.business_management') }}</small>--}}
-{{--                    <small class="tio-more-horizontal nav-subtitle-replacer"></small>--}}
-{{--                </li>--}}
+                <li class="nav-item">
+                    <small class="nav-subtitle" title="{{ translate('messages.business_section') }}">{{ translate('messages.business_management') }}</small>
+                    <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                </li>
 
                 <!-- withdraw -->
-{{--                @if (\App\CentralLogics\Helpers::module_permission_check('withdraw_list'))--}}
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/store/withdraw*') ? 'active' : '' }}">--}}
-{{--                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.transactions.store.withdraw_list') }}" title="{{ translate('messages.store_withdraws') }}">--}}
-{{--                        <i class="tio-table nav-icon"></i>--}}
-{{--                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.Withdraw Requests') }}</span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
-{{--                @endif--}}
+                @if (\App\CentralLogics\Helpers::module_permission_check('withdraw_list'))
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/store/withdraw*') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.transactions.store.withdraw_list') }}" title="{{ translate('messages.store_withdraws') }}">
+                        <i class="tio-table nav-icon"></i>
+                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.Withdraw Requests') }}</span>
+                    </a>
+                </li>
+                @endif
                 <!-- End withdraw -->
-{{--                    @if (\App\CentralLogics\Helpers::module_permission_check('account'))--}}
-{{--                        <li--}}
-{{--                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/store-disbursement*') ? 'active' : '' }}">--}}
-{{--                            <a class="js-navbar-vertical-aside-menu-link nav-link"--}}
-{{--                               href="{{ route('admin.transactions.store-disbursement.list', ['status' => 'all']) }}"--}}
-{{--                               title="{{ translate('messages.store_disbursement') }}">--}}
-{{--                                <i class="tio-wallet-outlined nav-icon"></i>--}}
-{{--                                <span--}}
-{{--                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.store_disbursement') }}</span>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                    @endif--}}
-{{--                    @if (\App\CentralLogics\Helpers::module_permission_check('account'))--}}
-{{--                        <li--}}
-{{--                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/dm-disbursement*') ? 'active' : '' }}">--}}
-{{--                            <a class="js-navbar-vertical-aside-menu-link nav-link"--}}
-{{--                               href="{{ route('admin.transactions.dm-disbursement.list', ['status' => 'all']) }}"--}}
-{{--                               title="{{ translate('messages.dm_disbursement') }}">--}}
-{{--                                <i class="tio-saving-outlined nav-icon"></i>--}}
-{{--                                <span--}}
-{{--                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.delivery_man_disbursement') }}</span>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                    @endif--}}
+                    @if (\App\CentralLogics\Helpers::module_permission_check('account'))
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/store-disbursement*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                               href="{{ route('admin.transactions.store-disbursement.list', ['status' => 'all']) }}"
+                               title="{{ translate('messages.store_disbursement') }}">
+                                <i class="tio-wallet-outlined nav-icon"></i>
+                                <span
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.store_disbursement') }}</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (\App\CentralLogics\Helpers::module_permission_check('account'))
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/dm-disbursement*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                               href="{{ route('admin.transactions.dm-disbursement.list', ['status' => 'all']) }}"
+                               title="{{ translate('messages.dm_disbursement') }}">
+                                <i class="tio-saving-outlined nav-icon"></i>
+                                <span
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.delivery_man_disbursement') }}</span>
+                            </a>
+                        </li>
+                    @endif
                 <!-- account -->
-{{--                @if (\App\CentralLogics\Helpers::module_permission_check('collect_cash'))--}}
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/account-transaction*') ? 'active' : '' }}">--}}
-{{--                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.transactions.account-transaction.index') }}" title="{{ translate('messages.collect_cash') }}">--}}
-{{--                        <i class="tio-money nav-icon"></i>--}}
-{{--                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.collect_cash') }}</span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
-{{--                @endif--}}
+                @if (\App\CentralLogics\Helpers::module_permission_check('collect_cash'))
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/account-transaction*') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.transactions.account-transaction.index') }}" title="{{ translate('messages.collect_cash') }}">
+                        <i class="tio-money nav-icon"></i>
+                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.collect_cash') }}</span>
+                    </a>
+                </li>
+                @endif
                 <!-- End account -->
 
                 <!-- provide_dm_earning -->
-{{--                @if (\App\CentralLogics\Helpers::module_permission_check('provide_dm_earning'))--}}
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/provide-deliveryman-earnings*') ? 'active' : '' }}">--}}
-{{--                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.transactions.provide-deliveryman-earnings.index') }}" title="{{ translate('messages.deliverymen_earning_provide') }}">--}}
-{{--                        <i class="tio-send nav-icon"></i>--}}
-{{--                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('Delivery Man Payments') }}</span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
-{{--                @endif--}}
+                @if (\App\CentralLogics\Helpers::module_permission_check('provide_dm_earning'))
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/provide-deliveryman-earnings*') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.transactions.provide-deliveryman-earnings.index') }}" title="{{ translate('messages.deliverymen_earning_provide') }}">
+                        <i class="tio-send nav-icon"></i>
+                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('Delivery Man Payments') }}</span>
+                    </a>
+                </li>
+                @endif
                 <!-- End provide_dm_earning -->
 
-{{--                @if (\App\CentralLogics\Helpers::module_permission_check('settings'))--}}
-{{--                    <li--}}
-{{--                        class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/withdraw-method*') ? 'active' : '' }}">--}}
-{{--                        <a class="js-navbar-vertical-aside-menu-link nav-link"--}}
-{{--                           href="{{ route('admin.transactions.withdraw-method.list') }}"--}}
-{{--                           title="{{ translate('messages.withdraw_method') }}">--}}
-{{--                            <i class="tio-savings nav-icon"></i>--}}
-{{--                            <span--}}
-{{--                                class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.withdraw_method') }}</span>--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
-{{--                @endif--}}
+                @if (\App\CentralLogics\Helpers::module_permission_check('settings'))
+                    <li
+                        class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/withdraw-method*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link"
+                           href="{{ route('admin.transactions.withdraw-method.list') }}"
+                           title="{{ translate('messages.withdraw_method') }}">
+                            <i class="tio-savings nav-icon"></i>
+                            <span
+                                class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.withdraw_method') }}</span>
+                        </a>
+                    </li>
+                @endif
 
                 <!-- Report -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('report'))
                 <li class="nav-item">
-{{--                    <small class="nav-subtitle" title="{{ translate('messages.report_and_analytics') }}">{{ translate('messages.report_and_analytics') }}</small>--}}
-{{--                    the above message is modified to Report by zg--}}
-                    <small class="nav-subtitle" title="Report">Report</small>
+                    <small class="nav-subtitle" title="{{ translate('messages.report_and_analytics') }}">{{ translate('messages.report_and_analytics') }}</small>
                     <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                 </li>
 
@@ -129,49 +127,49 @@
                     </a>
                 </li>
 
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/item-wise-report') ? 'active' : '' }}">--}}
-{{--                    <a class="nav-link " href="{{ route('admin.transactions.report.item-wise-report') }}" title="{{ translate('messages.item_report') }}">--}}
-{{--                        <span class="tio-chart-bar-1 nav-icon"></span>--}}
-{{--                        <span class="text-truncate">{{ translate('messages.item_report') }}</span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/item-wise-report') ? 'active' : '' }}">
+                    <a class="nav-link " href="{{ route('admin.transactions.report.item-wise-report') }}" title="{{ translate('messages.item_report') }}">
+                        <span class="tio-chart-bar-1 nav-icon"></span>
+                        <span class="text-truncate">{{ translate('messages.item_report') }}</span>
+                    </a>
+                </li>
 
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/store*') ? 'active' : '' }}">--}}
-{{--                    <a class="nav-link " href="{{ route('admin.transactions.report.store-summary-report') }}" title="{{ translate('messages.store_wise_report') }}">--}}
-{{--                        <span class="tio-home nav-icon"></span>--}}
-{{--                        <span class="text-truncate">{{ translate('messages.store_wise_report') }}</span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/store*') ? 'active' : '' }}">
+                    <a class="nav-link " href="{{ route('admin.transactions.report.store-summary-report') }}" title="{{ translate('messages.store_wise_report') }}">
+                        <span class="tio-home nav-icon"></span>
+                        <span class="text-truncate">{{ translate('messages.store_wise_report') }}</span>
+                    </a>
+                </li>
 
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/expense-report') ? 'active' : '' }}">--}}
-{{--                    <a class="nav-link " href="{{ route('admin.transactions.report.expense-report') }}" title="{{ translate('messages.expense_report') }}">--}}
-{{--                        <span class="tio-money nav-icon"></span>--}}
-{{--                        <span class="text-truncate">{{ translate('messages.expense_report') }}</span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/expense-report') ? 'active' : '' }}">
+                    <a class="nav-link " href="{{ route('admin.transactions.report.expense-report') }}" title="{{ translate('messages.expense_report') }}">
+                        <span class="tio-money nav-icon"></span>
+                        <span class="text-truncate">{{ translate('messages.expense_report') }}</span>
+                    </a>
+                </li>
 
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/disbursement-report') ? 'active' : '' }}">--}}
-{{--                    <a class="nav-link " href="{{ route('admin.transactions.report.disbursement_report') }}"--}}
-{{--                       title="{{ translate('messages.disbursement_report') }}">--}}
-{{--                        <span class="tio-saving nav-icon"></span>--}}
-{{--                        <span class="text-truncate">{{ translate('messages.disbursement_report') }}</span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/disbursement-report') ? 'active' : '' }}">
+                    <a class="nav-link " href="{{ route('admin.transactions.report.disbursement_report') }}"
+                       title="{{ translate('messages.disbursement_report') }}">
+                        <span class="tio-saving nav-icon"></span>
+                        <span class="text-truncate">{{ translate('messages.disbursement_report') }}</span>
+                    </a>
+                </li>
 
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/low-stock-report') ? 'active' : '' }}">--}}
-{{--                    <a class="nav-link " href="{{ route('admin.transactions.report.low-stock-report') }}" title="{{ translate('messages.limited_stock_item') }}">--}}
-{{--                        <span class="tio-chart-bar-4 nav-icon"></span>--}}
-{{--                        <span class="text-truncate text-capitalize">{{ translate('messages.limited_stock_item') }}</span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/low-stock-report') ? 'active' : '' }}">
+                    <a class="nav-link " href="{{ route('admin.transactions.report.low-stock-report') }}" title="{{ translate('messages.limited_stock_item') }}">
+                        <span class="tio-chart-bar-4 nav-icon"></span>
+                        <span class="text-truncate text-capitalize">{{ translate('messages.limited_stock_item') }}</span>
+                    </a>
+                </li>
 
 
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/order-report') ? 'active' : '' }}">--}}
-{{--                    <a class="nav-link " href="{{ route('admin.transactions.report.order-report') }}" title="{{ translate('messages.order_report') }}">--}}
-{{--                        <span class="tio-chart-bar-4 nav-icon"></span>--}}
-{{--                        <span class="text-truncate text-capitalize">{{ translate('messages.order_report') }}</span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/order-report') ? 'active' : '' }}">
+                    <a class="nav-link " href="{{ route('admin.transactions.report.order-report') }}" title="{{ translate('messages.order_report') }}">
+                        <span class="tio-chart-bar-4 nav-icon"></span>
+                        <span class="text-truncate text-capitalize">{{ translate('messages.order_report') }}</span>
+                    </a>
+                </li>
                 @endif
 
 

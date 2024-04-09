@@ -30,59 +30,59 @@
                         <div class="card-body">
                             <div class="py-2">
                                 <div class="row g-3 align-items-end">
-{{--                                    <div class="col-sm-6 col-lg-4">--}}
-{{--                                        @php($odc = \App\Models\BusinessSetting::where('key', 'order_delivery_verification')->first())--}}
-{{--                                        @php($odc = $odc ? $odc->value : 0)--}}
-{{--                                        <div class="form-group mb-0">--}}
+                                    <div class="col-sm-6 col-lg-4">
+                                        @php($odc = \App\Models\BusinessSetting::where('key', 'order_delivery_verification')->first())
+                                        @php($odc = $odc ? $odc->value : 0)
+                                        <div class="form-group mb-0">
 
-{{--                                            <label--}}
-{{--                                                class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">--}}
-{{--                                                <span class="pr-1 d-flex align-items-center switch--label">--}}
-{{--                                                    <span class="line--limit-1">--}}
-{{--                                                        {{ translate('messages.order_delivery_verification') }}--}}
-{{--                                                    </span>--}}
-{{--                                                    <span class="form-label-secondary text-danger d-flex"--}}
-{{--                                                        data-toggle="tooltip" data-placement="right"--}}
-{{--                                                        data-original-title="{{ translate('messages.When_a_deliveryman_arrives_for_delivery,_Customers_will_get_a_4-digit_verification_code_on_the_order_details_section_in_the_Customer_App_and_needs_to_provide_the_code_to_the_delivery_man_to_verify_the_order.') }}"><img--}}
-{{--                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"--}}
-{{--                                                            alt="{{ translate('messages.order_varification_toggle') }}"> *--}}
-{{--                                                    </span>--}}
-{{--                                                </span>--}}
-{{--                                                <input type="checkbox" onclick="toogleModal(event,'odc1','order-delivery-verification-on.png','order-delivery-verification-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Delivery_Verification?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Delivery_Verification?')}}</strong>',`<p>{{translate('messages.If you enable this, the Deliveryman has to verify the order during delivery through a 4-digit verification code.')}}</p>`,`<p>{{translate('messages.If you disable this, Deliveryman will deliver the order and update the status. He doesn’t need to verify the order with any code.')}}</p>`)" class="toggle-switch-input" value="1"--}}
-{{--                                                    name="odc" id="odc1" {{ $odc == 1 ? 'checked' : '' }}>--}}
-{{--                                                <span class="toggle-switch-label text">--}}
-{{--                                                    <span class="toggle-switch-indicator"></span>--}}
-{{--                                                </span>--}}
-{{--                                            </label>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="col-sm-6 col-lg-4">--}}
-{{--                                        @php($prescription_order_status = \App\Models\BusinessSetting::where('key', 'prescription_order_status')->first())--}}
+                                            <label
+                                                class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
+                                                <span class="pr-1 d-flex align-items-center switch--label">
+                                                    <span class="line--limit-1">
+                                                        {{ translate('messages.order_delivery_verification') }}
+                                                    </span>
+                                                    <span class="form-label-secondary text-danger d-flex"
+                                                        data-toggle="tooltip" data-placement="right"
+                                                        data-original-title="{{ translate('messages.When_a_deliveryman_arrives_for_delivery,_Customers_will_get_a_4-digit_verification_code_on_the_order_details_section_in_the_Customer_App_and_needs_to_provide_the_code_to_the_delivery_man_to_verify_the_order.') }}"><img
+                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                            alt="{{ translate('messages.order_varification_toggle') }}"> *
+                                                    </span>
+                                                </span>
+                                                <input type="checkbox" onclick="toogleModal(event,'odc1','order-delivery-verification-on.png','order-delivery-verification-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Delivery_Verification?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Delivery_Verification?')}}</strong>',`<p>{{translate('messages.If you enable this, the Deliveryman has to verify the order during delivery through a 4-digit verification code.')}}</p>`,`<p>{{translate('messages.If you disable this, Deliveryman will deliver the order and update the status. He doesn’t need to verify the order with any code.')}}</p>`)" class="toggle-switch-input" value="1"
+                                                    name="odc" id="odc1" {{ $odc == 1 ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label text">
+                                                    <span class="toggle-switch-indicator"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-lg-4">
+                                        @php($prescription_order_status = \App\Models\BusinessSetting::where('key', 'prescription_order_status')->first())
 
-{{--                                        @php($prescription_order_status = $prescription_order_status ? $prescription_order_status->value : 0)--}}
-{{--                                        <div class="form-group mb-0">--}}
+                                        @php($prescription_order_status = $prescription_order_status ? $prescription_order_status->value : 0)
+                                        <div class="form-group mb-0">
 
-{{--                                            <label--}}
-{{--                                                class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">--}}
-{{--                                                <span class="pr-1 d-flex align-items-center switch--label">--}}
-{{--                                                    <span class="line--limit-1">--}}
-{{--                                                        {{ translate('messages.Place_Order_by_Prescription') }}--}}
-{{--                                                    </span>--}}
-{{--                                                    <span class="form-label-secondary text-danger d-flex"--}}
-{{--                                                        data-toggle="tooltip" data-placement="right"--}}
-{{--                                                        data-original-title="{{ translate('messages.With_this_feature,_customers_can_place_an_order_by_uploading_prescription._Stores_can_enable/disable_this_feature_from_the_store_settings_if_needed.') }}"><img--}}
-{{--                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"--}}
-{{--                                                            alt="{{ translate('messages.prescription_order_status') }}"> * </span>--}}
-{{--                                                </span>--}}
-{{--                                                <input type="checkbox" onclick="toogleModal(event,'prescription_order_status','prescription-on.png','prescription-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Place_Order_by_Prescription?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Place_Order_by_Prescription?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_place_an_order_by_simply_uploading_their_prescriptions_in_the_Pharmacy_module_from_the_Customer_App_or_Website._Stores_can_enable/disable_this_feature_from_store_settings_if_needed.')}}</p>`,`<p>{{translate('messages.If_disabled,_this_feature_will_be_hidden_from_the_Customer_App,_Website,_and_Store_App_&_Panel.')}}</p>`)" class="toggle-switch-input" value="1"--}}
-{{--                                                    name="prescription_order_status" id="prescription_order_status"--}}
-{{--                                                    {{ $prescription_order_status == 1 ? 'checked' : '' }}>--}}
-{{--                                                <span class="toggle-switch-label text">--}}
-{{--                                                    <span class="toggle-switch-indicator"></span>--}}
-{{--                                                </span>--}}
-{{--                                            </label>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
+                                            <label
+                                                class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
+                                                <span class="pr-1 d-flex align-items-center switch--label">
+                                                    <span class="line--limit-1">
+                                                        {{ translate('messages.Place_Order_by_Prescription') }}
+                                                    </span>
+                                                    <span class="form-label-secondary text-danger d-flex"
+                                                        data-toggle="tooltip" data-placement="right"
+                                                        data-original-title="{{ translate('messages.With_this_feature,_customers_can_place_an_order_by_uploading_prescription._Stores_can_enable/disable_this_feature_from_the_store_settings_if_needed.') }}"><img
+                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                            alt="{{ translate('messages.prescription_order_status') }}"> * </span>
+                                                </span>
+                                                <input type="checkbox" onclick="toogleModal(event,'prescription_order_status','prescription-on.png','prescription-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Place_Order_by_Prescription?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Place_Order_by_Prescription?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_place_an_order_by_simply_uploading_their_prescriptions_in_the_Pharmacy_module_from_the_Customer_App_or_Website._Stores_can_enable/disable_this_feature_from_store_settings_if_needed.')}}</p>`,`<p>{{translate('messages.If_disabled,_this_feature_will_be_hidden_from_the_Customer_App,_Website,_and_Store_App_&_Panel.')}}</p>`)" class="toggle-switch-input" value="1"
+                                                    name="prescription_order_status" id="prescription_order_status"
+                                                    {{ $prescription_order_status == 1 ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label text">
+                                                    <span class="toggle-switch-indicator"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
                                     <div class="col-sm-6 col-lg-4">
                                         @php($home_delivery_status = \App\Models\BusinessSetting::where('key', 'home_delivery_status')->first())
 
@@ -108,89 +108,89 @@
                                             </label>
                                         </div>
                                     </div>
-{{--                                    <div class="col-sm-6 col-lg-4">--}}
-{{--                                        @php($takeaway_status = \App\Models\BusinessSetting::where('key', 'takeaway_status')->first())--}}
+                                    <div class="col-sm-6 col-lg-4">
+                                        @php($takeaway_status = \App\Models\BusinessSetting::where('key', 'takeaway_status')->first())
 
-{{--                                        @php($takeaway_status = $takeaway_status ? $takeaway_status->value : 0)--}}
-{{--                                        <div class="form-group mb-0">--}}
-{{--                                            <label--}}
-{{--                                                class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">--}}
-{{--                                                <span class="pr-1 d-flex align-items-center switch--label">--}}
-{{--                                                    <span class="line--limit-1">--}}
-{{--                                                        {{ translate('Takeaway') }}--}}
-{{--                                                    </span>--}}
-{{--                                                    <span class="form-label-secondary text-danger d-flex"--}}
-{{--                                                        data-toggle="tooltip" data-placement="right"--}}
-{{--                                                        data-original-title="{{ translate('messages.If_you_enable_this_feature,_customers_can_place_an_order_and_request_‘Takeaways’_or_‘self-pick-up’_from_stores.') }}"><img--}}
-{{--                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"--}}
-{{--                                                            alt="{{ translate('Home Delivery') }}"></span>--}}
-{{--                                                </span>--}}
-{{--                                                <input type="checkbox" onclick="toogleModal(event,'take_away','takeaway-on.png','takeaway-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.the_Takeaway_feature?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.the_Takeaway_feature?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_use_the_Takeaway_feature_during_checkout_from_the_Customer_App_or_Website.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_Takeaway_feature_will_be_hidden_from_the_Customer_App_or_Website.')}}</p>`)" class="toggle-switch-input" name="takeaway_status" value="1" id="take_away" {{ $takeaway_status == 1 ? 'checked' : '' }}>--}}
-{{--                                                <span class="toggle-switch-label text">--}}
-{{--                                                    <span class="toggle-switch-indicator"></span>--}}
-{{--                                                </span>--}}
-{{--                                            </label>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
+                                        @php($takeaway_status = $takeaway_status ? $takeaway_status->value : 0)
+                                        <div class="form-group mb-0">
+                                            <label
+                                                class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
+                                                <span class="pr-1 d-flex align-items-center switch--label">
+                                                    <span class="line--limit-1">
+                                                        {{ translate('Takeaway') }}
+                                                    </span>
+                                                    <span class="form-label-secondary text-danger d-flex"
+                                                        data-toggle="tooltip" data-placement="right"
+                                                        data-original-title="{{ translate('messages.If_you_enable_this_feature,_customers_can_place_an_order_and_request_‘Takeaways’_or_‘self-pick-up’_from_stores.') }}"><img
+                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                            alt="{{ translate('Home Delivery') }}"></span>
+                                                </span>
+                                                <input type="checkbox" onclick="toogleModal(event,'take_away','takeaway-on.png','takeaway-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.the_Takeaway_feature?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.the_Takeaway_feature?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_use_the_Takeaway_feature_during_checkout_from_the_Customer_App_or_Website.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_Takeaway_feature_will_be_hidden_from_the_Customer_App_or_Website.')}}</p>`)" class="toggle-switch-input" name="takeaway_status" value="1" id="take_away" {{ $takeaway_status == 1 ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label text">
+                                                    <span class="toggle-switch-indicator"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
 
-{{--                                    <div class="col-sm-6 col-lg-4">--}}
-{{--                                        @php($schedule_order = \App\Models\BusinessSetting::where('key', 'schedule_order')->first())--}}
-{{--                                        @php($schedule_order = $schedule_order ? $schedule_order->value : 0)--}}
-{{--                                        <div class="form-group mb-0">--}}
-{{--                                            <label--}}
-{{--                                                class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">--}}
-{{--                                                <span class="pr-1 d-flex align-items-center switch--label">--}}
-{{--                                                    <span class="line--limit-1">--}}
-{{--                                                        {{ translate('messages.Scheduled_Delivery') }}--}}
-{{--                                                    </span>--}}
-{{--                                                    <span class="form-label-secondary text-danger d-flex"--}}
-{{--                                                        data-toggle="tooltip" data-placement="right"--}}
-{{--                                                        data-original-title="{{ translate('messages.With_this_feature,_customers_can_choose_their_preferred_delivery_slot._Customers_can_select_a_delivery_slot_for_ASAP_or_a_specific_date_(within_2_days_from_the_order).')}}"><img--}}
-{{--                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"--}}
-{{--                                                            alt="{{ translate('messages.customer_varification_toggle') }}"> *--}}
-{{--                                                    </span>--}}
-{{--                                                </span>--}}
-{{--                                                <input type="checkbox" onclick="toogleModal(event,'schedule_order','schedule-on.png','schedule-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Scheduled Delivery?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Scheduled Delivery?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_choose_a_suitable_delivery_schedule_during checkout.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_Scheduled_Delivery_feature_will_be_hidden.')}}</p>`)" class="toggle-switch-input" value="1"--}}
-{{--                                                    name="schedule_order" id="schedule_order"--}}
-{{--                                                    {{ $schedule_order == 1 ? 'checked' : '' }}>--}}
-{{--                                                <span class="toggle-switch-label text">--}}
-{{--                                                    <span class="toggle-switch-indicator"></span>--}}
-{{--                                                </span>--}}
-{{--                                            </label>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
+                                    <div class="col-sm-6 col-lg-4">
+                                        @php($schedule_order = \App\Models\BusinessSetting::where('key', 'schedule_order')->first())
+                                        @php($schedule_order = $schedule_order ? $schedule_order->value : 0)
+                                        <div class="form-group mb-0">
+                                            <label
+                                                class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
+                                                <span class="pr-1 d-flex align-items-center switch--label">
+                                                    <span class="line--limit-1">
+                                                        {{ translate('messages.Scheduled_Delivery') }}
+                                                    </span>
+                                                    <span class="form-label-secondary text-danger d-flex"
+                                                        data-toggle="tooltip" data-placement="right"
+                                                        data-original-title="{{ translate('messages.With_this_feature,_customers_can_choose_their_preferred_delivery_slot._Customers_can_select_a_delivery_slot_for_ASAP_or_a_specific_date_(within_2_days_from_the_order).')}}"><img
+                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                            alt="{{ translate('messages.customer_varification_toggle') }}"> *
+                                                    </span>
+                                                </span>
+                                                <input type="checkbox" onclick="toogleModal(event,'schedule_order','schedule-on.png','schedule-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Scheduled Delivery?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Scheduled Delivery?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_choose_a_suitable_delivery_schedule_during checkout.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_Scheduled_Delivery_feature_will_be_hidden.')}}</p>`)" class="toggle-switch-input" value="1"
+                                                    name="schedule_order" id="schedule_order"
+                                                    {{ $schedule_order == 1 ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label text">
+                                                    <span class="toggle-switch-indicator"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
 
-{{--                                    <div class="col-sm-6 col-lg-4">--}}
-{{--                                        @php($schedule_order_slot_duration = \App\Models\BusinessSetting::where('key', 'schedule_order_slot_duration')->first())--}}
-{{--                                        @php($schedule_order_slot_duration_time_format = \App\Models\BusinessSetting::where('key', 'schedule_order_slot_duration_time_format')->first())--}}
-{{--                                        <div class="form-group mb-0">--}}
-{{--                                            <label class="input-label text-capitalize d-flex alig-items-center"--}}
-{{--                                                for="schedule_order_slot_duration">--}}
+                                    <div class="col-sm-6 col-lg-4">
+                                        @php($schedule_order_slot_duration = \App\Models\BusinessSetting::where('key', 'schedule_order_slot_duration')->first())
+                                        @php($schedule_order_slot_duration_time_format = \App\Models\BusinessSetting::where('key', 'schedule_order_slot_duration_time_format')->first())
+                                        <div class="form-group mb-0">
+                                            <label class="input-label text-capitalize d-flex alig-items-center"
+                                                for="schedule_order_slot_duration">
 
 
-{{--                                                <span class="pr-1 d-flex align-items-center switch--label">--}}
-{{--                                                    <span class="line--limit-1">--}}
-{{--                                                        {{ translate('messages.Time_Interval_for_Scheduled_Delivery') }}--}}
-{{--                                                    </span>--}}
-{{--                                                    <span class="form-label-secondary text-danger"--}}
-{{--                                                    data-toggle="tooltip" data-placement="right"--}}
-{{--                                                    data-original-title="{{ translate('messages.By_activating_this_feature,_customers_can_choose_their_suitable_delivery_slot_according_to_a_30-minute_or_1-hour_interval_set_by_the_Admin.') }}"><img--}}
-{{--                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"--}}
-{{--                                                        alt="{{ translate('Home Delivery') }}"></span>--}}
-{{--                                                </span>--}}
-{{--                                            </label>--}}
-{{--                                            <div class="d-flex">--}}
-{{--                                                <input type="number" name="schedule_order_slot_duration" class="form-control mr-3"--}}
-{{--                                                id="schedule_order_slot_duration"--}}
-{{--                                                value="{{ $schedule_order_slot_duration?->value ? $schedule_order_slot_duration_time_format?->value == 'hour' ? $schedule_order_slot_duration?->value /60 : $schedule_order_slot_duration?->value: 0 }}"--}}
-{{--                                                min="0" required>--}}
-{{--                                                <select  name="schedule_order_slot_duration_time_format" class="custom-select form-control w-90px">--}}
-{{--                                                    <option  value="min" {{ $schedule_order_slot_duration_time_format?->value == 'min'? 'selected' : '' }}>{{ translate('Min') }}</option>--}}
-{{--                                                    <option  value="hour" {{ $schedule_order_slot_duration_time_format?->value == 'hour'? 'selected' : ''}}>{{ translate('Hour') }}</option>--}}
-{{--                                                </select>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
+                                                <span class="pr-1 d-flex align-items-center switch--label">
+                                                    <span class="line--limit-1">
+                                                        {{ translate('messages.Time_Interval_for_Scheduled_Delivery') }}
+                                                    </span>
+                                                    <span class="form-label-secondary text-danger"
+                                                    data-toggle="tooltip" data-placement="right"
+                                                    data-original-title="{{ translate('messages.By_activating_this_feature,_customers_can_choose_their_suitable_delivery_slot_according_to_a_30-minute_or_1-hour_interval_set_by_the_Admin.') }}"><img
+                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        alt="{{ translate('Home Delivery') }}"></span>
+                                                </span>
+                                            </label>
+                                            <div class="d-flex">
+                                                <input type="number" name="schedule_order_slot_duration" class="form-control mr-3"
+                                                id="schedule_order_slot_duration"
+                                                value="{{ $schedule_order_slot_duration?->value ? $schedule_order_slot_duration_time_format?->value == 'hour' ? $schedule_order_slot_duration?->value /60 : $schedule_order_slot_duration?->value: 0 }}"
+                                                min="0" required>
+                                                <select  name="schedule_order_slot_duration_time_format" class="custom-select form-control w-90px">
+                                                    <option  value="min" {{ $schedule_order_slot_duration_time_format?->value == 'min'? 'selected' : '' }}>{{ translate('Min') }}</option>
+                                                    <option  value="hour" {{ $schedule_order_slot_duration_time_format?->value == 'hour'? 'selected' : ''}}>{{ translate('Hour') }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="btn--container justify-content-end mt-3">
                                     <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
@@ -262,16 +262,15 @@
                                 <select name="user_type" class="form-control h--45px" required>
                                     <option value="">{{ translate('messages.select_user_type') }}</option>
                                     <option value="admin">{{ translate('messages.admin') }}</option>
-{{--                                    <option value="store">{{ translate('messages.store') }}</option>--}}
-{{--                                    <option value="customer">{{ translate('messages.customer') }}</option>--}}
+                                    <option value="store">{{ translate('messages.store') }}</option>
+                                    <option value="customer">{{ translate('messages.customer') }}</option>
                                     <option value="deliveryman">{{ translate('messages.deliveryman') }}</option>
                                 </select>
                             </div>
                         </div>
-{{--                        <div class="mt-2">--}}
-{{--                            {{ translate('messages.*Users_cannot_cancel_an_order_if_the_Admin_does_not_specify_a_cause_for_cancellation,_even_though_they_see_the_‘Cancel_Order‘_option._So_Admin_MUST_provide_a_proper_Order_Cancellation_Reason_and_select_the_related_user.')}}--}}
-{{--                       </div>--}}
-{{--                        remove order settings , remove cancelation message , user type are removed by zg--}}
+                        <div class="mt-2">
+                            {{ translate('messages.*Users_cannot_cancel_an_order_if_the_Admin_does_not_specify_a_cause_for_cancellation,_even_though_they_see_the_‘Cancel_Order‘_option._So_Admin_MUST_provide_a_proper_Order_Cancellation_Reason_and_select_the_related_user.')}}
+                       </div>
                         <div class="btn--container justify-content-end mt-3 mb-4">
                             <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
                             <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"

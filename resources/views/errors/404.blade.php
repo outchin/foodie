@@ -57,8 +57,7 @@
 <div class="footer text-center">
     <ul class="list-inline list-separator">
         <li class="list-inline-item">
-{{--            <a class="list-separator-link" target="_blank" href="{{route('contact-us')}}">{{\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()->value??'Stack Food'}} {{translate('messages.support')}}</a>--}}
-            <a class="list-separator-link" target="_blank" href="https://www.facebook.com/profile.php?id=61550110089674">{{\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()->value??'Stack Food'}} {{translate('messages.support')}}</a>
+            <a class="list-separator-link" target="_blank" href="{{route('contact-us')}}">{{\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()->value??'Stack Food'}} {{translate('messages.support')}}</a>
         </li>
     </ul>
 </div>

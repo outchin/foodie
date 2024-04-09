@@ -38,12 +38,4 @@ class Handler extends ExceptionHandler
             //
         });
     }
-//     write handler by zg
-    public function report(Throwable $e)
-    {
-        if ($e instanceof \League\OAuth2\Server\Exception\OAuthServerException && $e->getCode() === 9) {
-            return;
-        }
-        parent::report($e);
-    }
 }

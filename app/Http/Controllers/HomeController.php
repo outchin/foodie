@@ -33,7 +33,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-         return redirect()->route('admin.auth.login');
         $datas =  DataSetting::with('translations')->where('type','admin_landing_page')->get();
         $data = [];
         foreach ($datas as $key => $value) {
@@ -113,11 +112,11 @@ class HomeController extends Controller
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
         
         if(isset($config) && $config){
+
             return view('home',compact('landing_data'));
         }elseif($landing_integration_type == 'file_upload' && File::exists('resources/views/layouts/landing/custom/index.blade.php')){
             return view('layouts.landing.custom.index');
         }elseif($landing_integration_type == 'url'){
-
             return redirect($redirect_url);
         }else{
             abort(404);

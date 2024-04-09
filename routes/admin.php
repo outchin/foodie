@@ -42,7 +42,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         Route::group(['prefix' => 'parcel', 'as' => 'parcel.', 'middleware' => ['module:parcel']], function () {
             Route::get('category/status/{id}/{status}', 'ParcelCategoryController@status')->name('category.status');
-            Route::get('create-order', 'ParcelCategoryController@create_order')->name('create-order');
             Route::resource('category', 'ParcelCategoryController');
             Route::get('orders/{status}', 'ParcelController@orders')->name('orders');
             Route::get('details/{id}', 'ParcelController@order_details')->name('order.details');
@@ -441,7 +440,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.', 'middleware' => ['module:settings', 'actch']], function () {
             Route::get('business-setup/{tab?}', 'BusinessSettingsController@business_index')->name('business-setup');
-            Route::get('create-order', 'BusinessSettingsController@create_order')->name('create-order');
             Route::get('react-setup', 'BusinessSettingsController@react_setup')->name('react-setup');
             Route::post('react-update', 'BusinessSettingsController@react_update')->name('react-update');
             Route::post('update-setup', 'BusinessSettingsController@business_setup')->name('update-setup');

@@ -36,7 +36,114 @@ class BusinessSettingsController extends Controller
 {
     use Processor;
 
+    public function business_index($tab = 'business')
+    {
+        if (!Helpers::module_permission_check('settings')) {
+            Toastr::error(translate('messages.access_denied'));
+            return back();
+        }
+        if ($tab == 'business') {
+            return view('admin-views.business-settings.business-index');
+        } else if ($tab == 'customer') {
+            $data = BusinessSetting::where('key', 'like', 'wallet_%')
+                ->orWhere('key', 'like', 'loyalty_%')
+                ->orWhere('key', 'like', 'ref_earning_%')
+                ->orWhere('key', 'like', 'add_fund_status%')
+                ->orWhere('key', 'like', 'customer_%')
+                ->orWhere('key', 'like', 'ref_earning_%')->get();
+            $data = array_column($data->toArray(), 'value', 'key');
+            return view('admin-views.business-settings.customer-index', compact('data'));
+        } else if ($tab == 'deliveryman') {
+            return view('admin-views.business-settings.deliveryman-index');
+        } else if ($tab == 'order') {
+            $reasons = OrderCancelReason::latest()->paginate(config('default_pagination'));
+            return view('admin-views.business-settings.order-index', compact('reasons'));
+        } else if ($tab == 'store') {
+            return view('admin-views.business-settings.store-index');
+        } else if ($tab == 'refund-settings') {
+            $refund_active_status = BusinessSetting::where(['key' => 'refund_active_status'])->first();
+            $reasons = RefundReason::orderBy('id', 'desc')
+                ->paginate(config('default_pagination'));
+            return view('admin-views.business-settings.refund-index', compact('refund_active_status', 'reasons'));
+        } else if ($tab == 'landing-page') {
+            $landing = BusinessSetting::where('key', 'landing_page')->exists();
+            if(!$landing){
+                Helpers::insert_business_settings_key('landing_page','1');
+                Helpers::insert_business_settings_key('landing_integration_type','none');
+            }
+            return view('admin-views.business-settings.landing-index');
+        } else if ($tab == 'websocket') {
+            return view('admin-views.business-settings.websocket-index');
+        } else if ($tab == 'disbursement') {
+            return view('admin-views.business-settings.disbursement-index');
+        }
+    }
 
+    public function update_dm(Request $request)
+    {
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
+
+        BusinessSetting::updateOrInsert(['key' => 'min_amount_to_pay_dm'], [
+            'value' => $request['min_amount_to_pay_dm']
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'cash_in_hand_overflow_delivery_man'], [
+            'value' => $request['cash_in_hand_overflow_delivery_man'] ?? 0
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'dm_max_cash_in_hand'], [
+            'value' => $request['dm_max_cash_in_hand']
+        ]);
+
+        DB::table('business_settings')->updateOrInsert(['key' => 'dm_tips_status'], [
+            'value' => $request['dm_tips_status']
+        ]);
+
+        DB::table('business_settings')->updateOrInsert(['key' => 'dm_maximum_orders'], [
+            'value' => $request['dm_maximum_orders']
+        ]);
+
+        DB::table('business_settings')->updateOrInsert(['key' => 'canceled_by_deliveryman'], [
+            'value' => $request['canceled_by_deliveryman']
+        ]);
+
+        DB::table('business_settings')->updateOrInsert(['key' => 'show_dm_earning'], [
+            'value' => $request['show_dm_earning']
+        ]);
+
+        DB::table('business_settings')->updateOrInsert(['key' => 'toggle_dm_registration'], [
+            'value' => $request['dm_self_registration']
+        ]);
+
+        DB::table('business_settings')->updateOrInsert(['key' => 'dm_picture_upload_status'], [
+            'value' => $request['dm_picture_upload_status']
+        ]);
+
+        Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
+        return back();
+    }
+
+    public function update_websocket(Request $request)
+    {
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
+        DB::table('business_settings')->updateOrInsert(['key' => 'websocket_status'], [
+            'value' => $request['websocket_status']
+        ]);
+        DB::table('business_settings')->updateOrInsert(['key' => 'websocket_url'], [
+            'value' => $request['websocket_url']
+        ]);
+
+        DB::table('business_settings')->updateOrInsert(['key' => 'websocket_port'], [
+            'value' => $request['websocket_port']
+        ]);
+
+        Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
+        return back();
+    }
 
     public function update_store(Request $request)
     {
@@ -87,8 +194,220 @@ class BusinessSettingsController extends Controller
         Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
         return back();
     }
+    public function update_order(Request $request)
+    {
+        $request->validate([
+            'home_delivery_status' => 'required_without:takeaway_status',
+            'takeaway_status' => 'required_without:home_delivery_status',
+        ]);
+
+        DB::table('business_settings')->updateOrInsert(['key' => 'order_delivery_verification'], [
+            'value' => $request['odc']
+        ]);
+        DB::table('business_settings')->updateOrInsert(['key' => 'schedule_order'], [
+            'value' => $request['schedule_order']
+        ]);
+        DB::table('business_settings')->updateOrInsert(['key' => 'prescription_order_status'], [
+            'value' => $request['prescription_order_status']
+        ]);
+        DB::table('business_settings')->updateOrInsert(['key' => 'home_delivery_status'], [
+            'value' => $request['home_delivery_status']
+        ]);
+        DB::table('business_settings')->updateOrInsert(['key' => 'takeaway_status'], [
+            'value' => $request['takeaway_status']
+        ]);
+
+        $time=  $request['schedule_order_slot_duration'];
+        if($request['schedule_order_slot_duration_time_format'] == 'hour'){
+            $time=  $request['schedule_order_slot_duration']*60;
+        }
+        BusinessSetting::updateOrInsert(['key' => 'schedule_order_slot_duration'], [
+            'value' => $time
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'schedule_order_slot_duration_time_format'], [
+            'value' => $request['schedule_order_slot_duration_time_format']
+        ]);
+
+        Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
+        return back();
+    }
 
 
+    public function update_disbursement(Request $request)
+    {
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
+
+        BusinessSetting::updateOrInsert(['key' => 'disbursement_type'], [
+            'value' => $request['disbursement_type']
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'store_disbursement_time_period'], [
+            'value' => $request['store_disbursement_time_period']
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'store_disbursement_week_start'], [
+            'value' => $request['store_disbursement_week_start']
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'store_disbursement_waiting_time'], [
+            'value' => $request['store_disbursement_waiting_time']
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'store_disbursement_create_time'], [
+            'value' => $request['store_disbursement_create_time']
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'store_disbursement_min_amount'], [
+            'value' => $request['store_disbursement_min_amount']
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'dm_disbursement_time_period'], [
+            'value' => $request['dm_disbursement_time_period']
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'dm_disbursement_week_start'], [
+            'value' => $request['dm_disbursement_week_start']
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'dm_disbursement_waiting_time'], [
+            'value' => $request['dm_disbursement_waiting_time']
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'dm_disbursement_create_time'], [
+            'value' => $request['dm_disbursement_create_time']
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'dm_disbursement_min_amount'], [
+            'value' => $request['dm_disbursement_min_amount']
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'system_php_path'], [
+            'value' => $request['system_php_path']
+        ]);
+
+        if(function_exists('exec')){
+            $data = self::generateCronCommand(disbursement_type: $request['disbursement_type']);
+            $scriptPath = 'script.sh';
+            exec('sh '. $scriptPath);
+            BusinessSetting::updateOrInsert(['key' => 'store_disbursement_command'], [
+                'value' => $data['storeCronCommand']
+            ]);
+            BusinessSetting::updateOrInsert(['key' => 'dm_disbursement_command'], [
+                'value' => $data['dmCronCommand']
+            ]);
+            Toastr::success(translate('messages.successfully_updated_disbursement_functionality'));
+            return back();
+        }else{
+            $data = self::generateCronCommand(disbursement_type: $request['disbursement_type']);
+            BusinessSetting::updateOrInsert(['key' => 'store_disbursement_command'], [
+                'value' => $data['storeCronCommand']
+            ]);
+            BusinessSetting::updateOrInsert(['key' => 'dm_disbursement_command'], [
+                'value' => $data['dmCronCommand']
+            ]);
+            if($request['disbursement_type'] == 'automated'){
+                Session::flash('disbursement_exec', true);
+                Toastr::warning(translate('messages.Servers_PHP_exec_function_is_disabled_check_dependencies_&_start_cron_job_manualy_in_server'));
+            }
+            Toastr::success(translate('messages.successfully_updated_disbursement_functionality'));
+            return back();
+        }
+
+    }
+
+    private function dmSchedule(){
+        $key = [
+            'dm_disbursement_time_period','dm_disbursement_week_start','dm_disbursement_create_time'
+        ];
+        $settings =  array_column(BusinessSetting::whereIn('key', $key)->get()->toArray(), 'value', 'key');
+
+        $scheduleFrequency = $settings['dm_disbursement_time_period'] ?? 'daily';
+        $weekDay = $settings['dm_disbursement_week_start'] ?? 'sunday';
+        $time =$settings['dm_disbursement_create_time'] ?? '12:00';
+
+
+        $time= explode(":",$time);
+
+        $hour= $time[0] ;
+        $min= $time[1] ;
+
+        $days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        $day = array_search($weekDay,$days);
+        $schedule = "* * * * *";
+        if($scheduleFrequency == 'daily' ){
+            $schedule =  $min. " ".$hour." "."* * *";
+
+        }
+        elseif($scheduleFrequency == 'weekly' ){
+
+            $schedule =  $min. " ".$hour." "."* * " .$day;
+        }
+        elseif($scheduleFrequency == 'monthly' ){
+            $schedule =  $min. " ".$hour." "."28-31 * *";
+
+        }
+        return $schedule;
+    }
+
+    private function storeSchedule(){
+        $key = [
+            'store_disbursement_time_period','store_disbursement_week_start','store_disbursement_create_time'
+        ];
+        $settings =  array_column(BusinessSetting::whereIn('key', $key)->get()->toArray(), 'value', 'key');
+
+        $scheduleFrequency = $settings['store_disbursement_time_period'] ?? 'daily';
+        $weekDay = $settings['store_disbursement_week_start'] ?? 'sunday';
+        $time =$settings['store_disbursement_create_time'] ?? '12:00';
+
+
+        $time= explode(":",$time);
+
+        $hour= $time[0] ;
+        $min= $time[1] ;
+
+        $days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        $day = array_search($weekDay,$days);
+        $schedule = "* * * * *";
+        if($scheduleFrequency == 'daily' ){
+            $schedule =  $min. " ".$hour." "."* * *";
+
+        }
+        elseif($scheduleFrequency == 'weekly' ){
+
+            $schedule =  $min. " ".$hour." "."* * " .$day;
+        }
+        elseif($scheduleFrequency == 'monthly' ){
+            $schedule =  $min. " ".$hour." "."28-31 * *";
+
+        }
+        return $schedule;
+    }
+
+    private function generateCronCommand($disbursement_type = 'automated') {
+        $system_php_path = BusinessSetting::where('key', 'system_php_path')->first();
+        $system_php_path = $system_php_path ? $system_php_path->value : "/usr/bin/php";
+        $dmSchedule = self::dmSchedule();
+        $storeSchedule = self::storeSchedule();
+        $scriptFilename = $_SERVER['SCRIPT_FILENAME'];
+        $rootPath = dirname($scriptFilename);
+        $phpCommand = $system_php_path;
+        $dmScriptPath = $rootPath . "/artisan dm:disbursement";
+        $storeScriptPath = $rootPath . "/artisan store:disbursement";
+        $dmClearCronCommand = "(crontab -l | grep -v \"$phpCommand $dmScriptPath\") | crontab -";
+        $dmCronCommand = $disbursement_type == 'automated'?"(crontab -l ; echo \"$dmSchedule $phpCommand $dmScriptPath\") | crontab -":"";
+        $storeClearCronCommand = "(crontab -l | grep -v \"$phpCommand $storeScriptPath\") | crontab -";
+        $storeCronCommand = $disbursement_type == 'automated'?"(crontab -l ; echo \"$storeSchedule $phpCommand $storeScriptPath\") | crontab -":"";
+        $scriptContent = "#!/bin/bash\n";
+        $scriptContent .= $dmClearCronCommand."\n";
+        $scriptContent .= $dmCronCommand."\n";
+        $scriptContent .= $storeClearCronCommand."\n";
+        $scriptContent .= $storeCronCommand."\n";
+        $scriptFilePath = $rootPath . "/script.sh";
+        file_put_contents($scriptFilePath, $scriptContent);
+
+        return [
+            'dmCronCommand' => $dmCronCommand,
+            'storeCronCommand' =>  $storeCronCommand
+        ];
+    }
 
     public function business_setup(Request $request)
     {
@@ -100,15 +419,15 @@ class BusinessSettingsController extends Controller
 
 
         DB::table('business_settings')->updateOrInsert(['key' => 'business_name'], [
-            'value' => $request['store_name'] ?? 'Snow Delivery'
+            'value' => $request['store_name']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'currency'], [
-            'value' => $request['currency'] ?? 'MMK'
+            'value' => $request['currency']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'timezone'], [
-            'value' => $request['timezone'] ?? 'Asia/Rangoon'
+            'value' => $request['timezone']
         ]);
 
         $curr_logo = BusinessSetting::where(['key' => 'logo'])->first();
@@ -148,23 +467,23 @@ class BusinessSettingsController extends Controller
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'phone'], [
-            'value' => $request['phone'] ?? '959251098196'
+            'value' => $request['phone']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'email_address'], [
-            'value' => $request['email'] ?? 'pyaesonephyoe714@gmail.com'
+            'value' => $request['email']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'address'], [
-            'value' => $request['address'] ?? '42nd 60x62 Street'
+            'value' => $request['address']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'footer_text'], [
-            'value' => $request['footer_text'] ?? 'All rights reserved @ 2024 Developed by TioTech'
+            'value' => $request['footer_text']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'cookies_text'], [
-            'value' => $request['cookies_text'] ?? "Explore our site's flavors, where every click is a treat!"
+            'value' => $request['cookies_text']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'minimum_shipping_charge'], [
@@ -175,20 +494,20 @@ class BusinessSettingsController extends Controller
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'currency_symbol_position'], [
-            'value' => $request['currency_symbol_position'] ?? 'right'
+            'value' => $request['currency_symbol_position']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'tax_included'], [
             'value' => $request['tax_included']
         ]);
         DB::table('business_settings')->updateOrInsert(['key' => 'order_confirmation_model'], [
-            'value' => $request['order_confirmation_model'] ?? 'deliveryman'
+            'value' => $request['order_confirmation_model']
         ]);
         DB::table('business_settings')->updateOrInsert(['key' => 'partial_payment_status'], [
             'value' => $request['partial_payment_status']
         ]);
         DB::table('business_settings')->updateOrInsert(['key' => 'partial_payment_method'], [
-            'value' => $request['partial_payment_method'] ?? 'both'
+            'value' => $request['partial_payment_method']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'tax'], [
@@ -200,11 +519,11 @@ class BusinessSettingsController extends Controller
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'country'], [
-            'value' => $request['country'] ?? 'MM'
+            'value' => $request['country']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'default_location'], [
-            'value' => json_encode(['lat' => $request['latitude'] ?? "20.151089", 'lng' => $request['longitude'] ?? "94.947628" ])
+            'value' => json_encode(['lat' => $request['latitude'], 'lng' => $request['longitude']])
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'admin_order_notification'], [
@@ -212,7 +531,7 @@ class BusinessSettingsController extends Controller
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'order_notification_type'], [
-            'value' => $request['order_notification_type'] ?? 'firebase'
+            'value' => $request['order_notification_type']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'free_delivery_over_status'], [
@@ -251,18 +570,18 @@ class BusinessSettingsController extends Controller
         // ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'timeformat'], [
-            'value' => $request['time_format'] ?? '24'
+            'value' => $request['time_format']
         ]);
 
 
 
         DB::table('business_settings')->updateOrInsert(['key' => 'toggle_veg_non_veg'], [
-            'value' => $request['vnv'] ?? '1'
+            'value' => $request['vnv']
         ]);
 
 
         DB::table('business_settings')->updateOrInsert(['key' => 'digit_after_decimal_point'], [
-            'value' => $request['digit_after_decimal_point'] ?? '0'
+            'value' => $request['digit_after_decimal_point']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'delivery_charge_comission'], [
@@ -284,6 +603,14 @@ class BusinessSettingsController extends Controller
         return back();
     }
 
+    public function mail_index()
+    {
+        return view('admin-views.business-settings.mail-index');
+    }
+    public function test_mail()
+    {
+        return view('admin-views.business-settings.send-mail-index');
+    }
 
     public function mail_config(Request $request)
     {
@@ -312,12 +639,577 @@ class BusinessSettingsController extends Controller
         return back();
     }
 
+    public function mail_config_status(Request $request)
+    {
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
+        $config = BusinessSetting::where(['key' => 'mail_config'])->first();
+
+        $data = $config ? json_decode($config['value'], true) : null;
+
+        BusinessSetting::updateOrInsert(
+            ['key' => 'mail_config'],
+            [
+                'value' => json_encode([
+                    "status" => $request['status'] ?? 0,
+                    "name" => $data['name'] ?? '',
+                    "host" => $data['host'] ?? '',
+                    "driver" => $data['driver'] ?? '',
+                    "port" => $data['port'] ?? '',
+                    "username" => $data['username'] ?? '',
+                    "email_id" => $data['email_id'] ?? '',
+                    "encryption" => $data['encryption'] ?? '',
+                    "password" => $data['password'] ?? ''
+                ]),
+                'updated_at' => now()
+            ]
+        );
+        Toastr::success(translate('messages.configuration_updated_successfully'));
+        return back();
+    }
+
+    public function payment_index()
+    {
+        $published_status = 0; // Set a default value
+        $payment_published_status = config('get_payment_publish_status');
+        if (isset($payment_published_status[0]['is_published'])) {
+            $published_status = $payment_published_status[0]['is_published'];
+        }
+
+        $routes = config('addon_admin_routes');
+        $desiredName = 'payment_setup';
+        $payment_url = '';
+
+        foreach ($routes as $routeArray) {
+            foreach ($routeArray as $route) {
+                if ($route['name'] === $desiredName) {
+                    $payment_url = $route['url'];
+                    break 2;
+                }
+            }
+        }
+        $data_values = Setting::whereIn('settings_type', ['payment_config'])->whereIn('key_name', ['ssl_commerz','paypal','stripe','razor_pay','senang_pay','paytabs','paystack','paymob_accept','paytm','flutterwave','liqpay','bkash','mercadopago'])->get();
+
+        return view('admin-views.business-settings.payment-index', compact('published_status', 'payment_url','data_values'));
+    }
+
+    public function payment_update(Request $request, $name)
+    {
+        // dd($name);
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
+        if ($name == 'cash_on_delivery') {
+            $payment = BusinessSetting::where('key', 'cash_on_delivery')->first();
+            if (isset($payment) == false) {
+                DB::table('business_settings')->insert([
+                    'key'        => 'cash_on_delivery',
+                    'value'      => json_encode([
+                        'status' => $request['status'],
+                    ]),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                DB::table('business_settings')->where(['key' => 'cash_on_delivery'])->update([
+                    'key'        => 'cash_on_delivery',
+                    'value'      => json_encode([
+                        'status' => $request['status'],
+                    ]),
+                    'updated_at' => now(),
+                ]);
+            }
+        } elseif ($name == 'digital_payment') {
+            $payment = BusinessSetting::where('key', 'digital_payment')->first();
+            if (isset($payment) == false) {
+                DB::table('business_settings')->insert([
+                    'key'        => 'digital_payment',
+                    'value'      => json_encode([
+                        'status' => $request['status'],
+                    ]),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                DB::table('business_settings')->where(['key' => 'digital_payment'])->update([
+                    'key'        => 'digital_payment',
+                    'value'      => json_encode([
+                        'status' => $request['status'],
+                    ]),
+                    'updated_at' => now(),
+                ]);
+            }
+        } elseif ($name == 'ssl_commerz_payment') {
+            $payment = BusinessSetting::where('key', 'ssl_commerz_payment')->first();
+            if (isset($payment) == false) {
+                DB::table('business_settings')->insert([
+                    'key'        => 'ssl_commerz_payment',
+                    'value'      => json_encode([
+                        'status'         => 1,
+                        'store_id'       => '',
+                        'store_password' => '',
+                    ]),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                DB::table('business_settings')->where(['key' => 'ssl_commerz_payment'])->update([
+                    'key'        => 'ssl_commerz_payment',
+                    'value'      => json_encode([
+                        'status'         => $request['status'],
+                        'store_id'       => $request['store_id'],
+                        'store_password' => $request['store_password'],
+                    ]),
+                    'updated_at' => now(),
+                ]);
+            }
+        } elseif ($name == 'razor_pay') {
+            $payment = BusinessSetting::where('key', 'razor_pay')->first();
+            if (isset($payment) == false) {
+                DB::table('business_settings')->insert([
+                    'key'        => 'razor_pay',
+                    'value'      => json_encode([
+                        'status'       => 1,
+                        'razor_key'    => '',
+                        'razor_secret' => '',
+                    ]),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                DB::table('business_settings')->where(['key' => 'razor_pay'])->update([
+                    'key'        => 'razor_pay',
+                    'value'      => json_encode([
+                        'status'       => $request['status'],
+                        'razor_key'    => $request['razor_key'],
+                        'razor_secret' => $request['razor_secret'],
+                    ]),
+                    'updated_at' => now(),
+                ]);
+            }
+        } elseif ($name == 'paypal') {
+            $payment = BusinessSetting::where('key', 'paypal')->first();
+            if (isset($payment) == false) {
+                DB::table('business_settings')->insert([
+                    'key'        => 'paypal',
+                    'value'      => json_encode([
+                        'status'           => 1,
+                        'mode'              => '',
+                        'paypal_client_id' => '',
+                        'paypal_secret'    => '',
+                    ]),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                DB::table('business_settings')->where(['key' => 'paypal'])->update([
+                    'key'        => 'paypal',
+                    'value'      => json_encode([
+                        'status'           => $request['status'],
+                        'mode'              => $request['mode'],
+                        'paypal_client_id' => $request['paypal_client_id'],
+                        'paypal_secret'    => $request['paypal_secret'],
+                    ]),
+                    'updated_at' => now(),
+                ]);
+            }
+        } elseif ($name == 'stripe') {
+            $payment = BusinessSetting::where('key', 'stripe')->first();
+            if (isset($payment) == false) {
+                DB::table('business_settings')->insert([
+                    'key'        => 'stripe',
+                    'value'      => json_encode([
+                        'status'        => 1,
+                        'api_key'       => '',
+                        'published_key' => '',
+                    ]),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                DB::table('business_settings')->where(['key' => 'stripe'])->update([
+                    'key'        => 'stripe',
+                    'value'      => json_encode([
+                        'status'        => $request['status'],
+                        'api_key'       => $request['api_key'],
+                        'published_key' => $request['published_key'],
+                    ]),
+                    'updated_at' => now(),
+                ]);
+            }
+        } elseif ($name == 'senang_pay') {
+            $payment = BusinessSetting::where('key', 'senang_pay')->first();
+            if (isset($payment) == false) {
+                DB::table('business_settings')->insert([
+
+                    'key'        => 'senang_pay',
+                    'value'      => json_encode([
+                        'status'        => 1,
+                        'secret_key'    => '',
+                        'published_key' => '',
+                        'merchant_id' => '',
+                    ]),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                DB::table('business_settings')->where(['key' => 'senang_pay'])->update([
+                    'key'        => 'senang_pay',
+                    'value'      => json_encode([
+                        'status'        => $request['status'],
+                        'secret_key'    => $request['secret_key'],
+                        'published_key' => $request['publish_key'],
+                        'merchant_id' => $request['merchant_id'],
+                    ]),
+                    'updated_at' => now(),
+                ]);
+            }
+        } elseif ($name == 'paystack') {
+            $payment = BusinessSetting::where('key', 'paystack')->first();
+            if (isset($payment) == false) {
+                DB::table('business_settings')->insert([
+                    'key'        => 'paystack',
+                    'value'      => json_encode([
+                        'status'        => 1,
+                        'publicKey'     => '',
+                        'secretKey'     => '',
+                        'paymentUrl'    => '',
+                        'merchantEmail' => '',
+                    ]),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                DB::table('business_settings')->where(['key' => 'paystack'])->update([
+                    'key'        => 'paystack',
+                    'value'      => json_encode([
+                        'status'        => $request['status'],
+                        'publicKey'     => $request['publicKey'],
+                        'secretKey'     => $request['secretKey'],
+                        'paymentUrl'    => $request['paymentUrl'],
+                        'merchantEmail' => $request['merchantEmail'],
+                    ]),
+                    'updated_at' => now(),
+                ]);
+            }
+        } elseif ($name == 'flutterwave') {
+            $payment = BusinessSetting::where('key', 'flutterwave')->first();
+            if (isset($payment) == false) {
+                DB::table('business_settings')->insert([
+                    'key'        => 'flutterwave',
+                    'value'      => json_encode([
+                        'status'        => 1,
+                        'public_key'     => '',
+                        'secret_key'     => '',
+                        'hash'    => '',
+                    ]),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                DB::table('business_settings')->where(['key' => 'flutterwave'])->update([
+                    'key'        => 'flutterwave',
+                    'value'      => json_encode([
+                        'status'        => $request['status'],
+                        'public_key'     => $request['public_key'],
+                        'secret_key'     => $request['secret_key'],
+                        'hash'    => $request['hash'],
+                    ]),
+                    'updated_at' => now(),
+                ]);
+            }
+        } elseif ($name == 'mercadopago') {
+            $payment = BusinessSetting::updateOrInsert(
+                ['key' => 'mercadopago'],
+                [
+                    'value'      => json_encode([
+                        'status'        => $request['status'],
+                        'public_key'     => $request['public_key'],
+                        'access_token'     => $request['access_token'],
+                    ]),
+                    'updated_at' => now()
+                ]
+            );
+        } elseif ($name == 'paymob_accept') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'paymob_accept'], [
+                'value' => json_encode([
+                    'status' => $request['status'],
+                    'api_key' => $request['api_key'],
+                    'iframe_id' => $request['iframe_id'],
+                    'integration_id' => $request['integration_id'],
+                    'hmac' => $request['hmac'],
+                ]),
+                'updated_at' => now()
+            ]);
+        } elseif ($name == 'liqpay') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'liqpay'], [
+                'value' => json_encode([
+                    'status' => $request['status'],
+                    'public_key' => $request['public_key'],
+                    'private_key' => $request['private_key']
+                ]),
+                'updated_at' => now()
+            ]);
+        } elseif ($name == 'paytm') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'paytm'], [
+                'value' => json_encode([
+                    'status' => $request['status'],
+                    'paytm_merchant_key' => $request['paytm_merchant_key'],
+                    'paytm_merchant_mid' => $request['paytm_merchant_mid'],
+                    'paytm_merchant_website' => $request['paytm_merchant_website'],
+                    'paytm_refund_url' => $request['paytm_refund_url'],
+                ]),
+                'updated_at' => now()
+            ]);
+        } elseif ($name == 'bkash') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'bkash'], [
+                'value' => json_encode([
+                    'status' => $request['status'],
+                    'api_key' => $request['api_key'],
+                    'api_secret' => $request['api_secret'],
+                    'username' => $request['username'],
+                    'password' => $request['password'],
+                ]),
+                'updated_at' => now()
+            ]);
+        } elseif ($name == 'paytabs') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'paytabs'], [
+                'value' => json_encode([
+                    'status' => $request['status'],
+                    'profile_id' => $request['profile_id'],
+                    'server_key' => $request['server_key'],
+                    'base_url' => $request['base_url']
+                ]),
+                'updated_at' => now()
+            ]);
+        }
+
+        Toastr::success(translate('messages.payment_settings_updated'));
+        return back();
+    }
+
+    public function payment_config_update(Request $request)
+    {
+        if ($request->toggle_type) {
+            BusinessSetting::query()->updateOrInsert(['key' => $request->toggle_type], [
+                'value' =>  $request->toggle_type == 'offline_payment_status' ? $request?->status : json_encode(['status' => $request?->status]),
+                'updated_at' => now()
+            ]);
+            Toastr::success(translate('messages.payment_settings_updated'));
+            return back();
+        }
+
+        $request['status'] = $request->status??0;
+
+        $validation = [
+            'gateway' => 'required|in:ssl_commerz,paypal,stripe,razor_pay,senang_pay,paytabs,paystack,paymob_accept,paytm,flutterwave,liqpay,bkash,mercadopago',
+            'mode' => 'required|in:live,test'
+        ];
+
+        $additional_data = [];
+
+        if ($request['gateway'] == 'ssl_commerz') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'store_id' => 'required_if:status,1',
+                'store_password' => 'required_if:status,1'
+            ];
+        } elseif ($request['gateway'] == 'paypal') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'client_id' => 'required_if:status,1',
+                'client_secret' => 'required_if:status,1'
+            ];
+        } elseif ($request['gateway'] == 'stripe') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'api_key' => 'required_if:status,1',
+                'published_key' => 'required_if:status,1',
+            ];
+        } elseif ($request['gateway'] == 'razor_pay') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'api_key' => 'required_if:status,1',
+                'api_secret' => 'required_if:status,1'
+            ];
+        } elseif ($request['gateway'] == 'senang_pay') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'callback_url' => 'required_if:status,1',
+                'secret_key' => 'required_if:status,1',
+                'merchant_id' => 'required_if:status,1'
+            ];
+        } elseif ($request['gateway'] == 'paytabs') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'profile_id' => 'required_if:status,1',
+                'server_key' => 'required_if:status,1',
+                'base_url' => 'required_if:status,1'
+            ];
+        } elseif ($request['gateway'] == 'paystack') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'callback_url' => 'required_if:status,1',
+                'public_key' => 'required_if:status,1',
+                'secret_key' => 'required_if:status,1',
+                'merchant_email' => 'required_if:status,1'
+            ];
+        } elseif ($request['gateway'] == 'paymob_accept') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'callback_url' => 'required_if:status,1',
+                'api_key' => 'required_if:status,1',
+                'iframe_id' => 'required_if:status,1',
+                'integration_id' => 'required_if:status,1',
+                'hmac' => 'required_if:status,1'
+            ];
+        } elseif ($request['gateway'] == 'mercadopago') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'access_token' => 'required_if:status,1',
+                'public_key' => 'required_if:status,1'
+            ];
+        } elseif ($request['gateway'] == 'liqpay') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'private_key' => 'required_if:status,1',
+                'public_key' => 'required_if:status,1'
+            ];
+        } elseif ($request['gateway'] == 'flutterwave') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'secret_key' => 'required_if:status,1',
+                'public_key' => 'required_if:status,1',
+                'hash' => 'required_if:status,1'
+            ];
+        } elseif ($request['gateway'] == 'paytm') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'merchant_key' => 'required_if:status,1',
+                'merchant_id' => 'required_if:status,1',
+                'merchant_website_link' => 'required_if:status,1'
+            ];
+        } elseif ($request['gateway'] == 'bkash') {
+            $additional_data = [
+                'status' => 'required|in:1,0',
+                'app_key' => 'required_if:status,1',
+                'app_secret' => 'required_if:status,1',
+                'username' => 'required_if:status,1',
+                'password' => 'required_if:status,1',
+            ];
+        }
+
+        $request->validate(array_merge($validation, $additional_data));
+
+        $settings = Setting::where('key_name', $request['gateway'])->where('settings_type', 'payment_config')->first();
+
+        $additional_data_image = $settings['additional_data'] != null ? json_decode($settings['additional_data']) : null;
+
+        if ($request->has('gateway_image')) {
+            $gateway_image = $this->file_uploader('payment_modules/gateway_image/', 'png', $request['gateway_image'], $additional_data_image != null ? $additional_data_image->gateway_image : '');
+        } else {
+            $gateway_image = $additional_data_image != null ? $additional_data_image->gateway_image : '';
+        }
+
+        $payment_additional_data = [
+            'gateway_title' => $request['gateway_title'],
+            'gateway_image' => $gateway_image,
+        ];
+
+        $validator = Validator::make($request->all(), array_merge($validation, $additional_data));
 
 
+        Setting::updateOrCreate(['key_name' => $request['gateway'], 'settings_type' => 'payment_config'], [
+            'key_name' => $request['gateway'],
+            'live_values' => $validator->validate(),
+            'test_values' => $validator->validate(),
+            'settings_type' => 'payment_config',
+            'mode' => $request['mode'],
+            'is_active' => $request['status'],
+            'additional_data' => json_encode($payment_additional_data),
+        ]);
+
+        Toastr::success(GATEWAYS_DEFAULT_UPDATE_200['message']);
+        return back();
+    }
 
     public function app_settings()
     {
         return view('admin-views.business-settings.app-settings');
+    }
+
+    public function update_app_settings(Request $request)
+    {
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
+
+        if($request->type == 'user_app'){
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_minimum_version_android'], [
+                'value' => $request['app_minimum_version_android']
+            ]);
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_minimum_version_ios'], [
+                'value' => $request['app_minimum_version_ios']
+            ]);
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_url_android'], [
+                'value' => $request['app_url_android']
+            ]);
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_url_ios'], [
+                'value' => $request['app_url_ios']
+            ]);
+
+            Toastr::success(translate('messages.User_app_settings_updated'));
+            return back();
+        }
+
+        if($request->type == 'store_app'){
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_minimum_version_android_store'], [
+                'value' => $request['app_minimum_version_android_store']
+            ]);
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_url_android_store'], [
+                'value' => $request['app_url_android_store']
+            ]);
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_minimum_version_ios_store'], [
+                'value' => $request['app_minimum_version_ios_store']
+            ]);
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_url_ios_store'], [
+                'value' => $request['app_url_ios_store']
+            ]);
+
+            Toastr::success(translate('messages.Store_app_settings_updated'));
+            return back();
+        }
+
+
+        if($request->type == 'deliveryman_app'){
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_minimum_version_android_deliveryman'], [
+                'value' => $request['app_minimum_version_android_deliveryman']
+            ]);
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_url_android_deliveryman'], [
+                'value' => $request['app_url_android_deliveryman']
+            ]);
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_minimum_version_ios_deliveryman'], [
+                'value' => $request['app_minimum_version_ios_deliveryman']
+            ]);
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_url_ios_deliveryman'], [
+                'value' => $request['app_url_ios_deliveryman']
+            ]);
+
+            Toastr::success(translate('messages.Delivery_app_settings_updated'));
+            return back();
+        }
+
+        return back();
     }
 
     public function landing_page_settings($tab)
@@ -354,12 +1246,609 @@ class BusinessSettingsController extends Controller
         }
     }
 
+    public function update_landing_page_settings(Request $request, $tab)
+    {
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
 
+        if ($tab == 'text') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'landing_page_text'], [
+                'value' => json_encode([
+                    'header_title_1' => $request['header_title_1'],
+                    'header_title_2' => $request['header_title_2'],
+                    'header_title_3' => $request['header_title_3'],
+                    'about_title' => $request['about_title'],
+                    'why_choose_us' => $request['why_choose_us'],
+                    'why_choose_us_title' => $request['why_choose_us_title'],
+                    'module_section_title' => $request['module_section_title'],
+                    'module_section_sub_title' => $request['module_section_sub_title'],
+                    'refer_section_title' => $request['refer_section_title'],
+                    'refer_section_sub_title' => $request['refer_section_sub_title'],
+                    'refer_section_description' => $request['refer_section_description'],
+                    'joinus_section_title' => $request['joinus_section_title'],
+                    'joinus_section_sub_title' => $request['joinus_section_sub_title'],
+                    'download_app_section_title' => $request['download_app_section_title'],
+                    'download_app_section_sub_title' => $request['download_app_section_sub_title'],
+                    'testimonial_title' => $request['testimonial_title'],
+                    'mobile_app_section_heading' => $request['mobile_app_section_heading'],
+                    'mobile_app_section_text' => $request['mobile_app_section_text'],
+                    'feature_section_description' => $request['feature_section_description'],
+                    'feature_section_title' => $request['feature_section_title'],
+                    'newsletter_title' => $request['newsletter_title'],
+                    'newsletter_sub_title' => $request['newsletter_sub_title'],
+                    'contact_us_title' => $request['contact_us_title'],
+                    'contact_us_sub_title' => $request['contact_us_sub_title'],
+                    'footer_article' => $request['footer_article']
+                ])
+            ]);
+            Toastr::success(translate('messages.landing_page_text_updated'));
+        } else if ($tab == 'links') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'landing_page_links'], [
+                'value' => json_encode([
+                    'app_url_android_status' => $request['app_url_android_status'],
+                    'app_url_android' => $request['app_url_android'],
+                    'app_url_ios_status' => $request['app_url_ios_status'],
+                    'app_url_ios' => $request['app_url_ios'],
+                    'web_app_url_status' => $request['web_app_url_status'],
+                    'web_app_url' => $request['web_app_url'],
+                    'seller_app_url_status' => $request['seller_app_url_status'],
+                    'seller_app_url' => $request['seller_app_url'],
+                    'deliveryman_app_url_status' => $request['deliveryman_app_url_status'],
+                    'deliveryman_app_url' => $request['deliveryman_app_url']
+                ])
+            ]);
+            Toastr::success(translate('messages.landing_page_links_updated'));
+        } else if ($tab == 'speciality') {
+            $data = [];
+            $imageName = null;
+            $speciality = BusinessSetting::where('key', 'speciality')->first();
+            if ($speciality) {
+                $data = json_decode($speciality->value, true);
+            }
+            if ($request->has('image')) {
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->image->move(public_path('assets/landing/image'), $imageName);
+            }
+            array_push($data, [
+                'img' => $imageName,
+                'title' => $request->speciality_title
+            ]);
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'speciality'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_speciality_updated'));
+        } else if ($tab == 'joinas') {
+            $data = [];
+            $joinas = BusinessSetting::where('key', 'join_as_images')->first();
+            if ($joinas) {
+                $data = json_decode($joinas->value, true);
+            }
+            if ($request->has('seller_banner_bg')) {
+                if (isset($data['seller_banner_bg']) && file_exists(public_path('assets/landing/image/' . $data['seller_banner_bg']))) {
+                    unlink(public_path('assets/landing/image/' . $data['seller_banner_bg']));
+                }
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->seller_banner_bg->move(public_path('assets/landing/image'), $imageName);
+                $data['seller_banner_bg'] = $imageName;
+            }
+
+            if ($request->has('deliveryman_banner_bg')) {
+                if (isset($data['deliveryman_banner_bg']) && file_exists(public_path('assets/landing/image/' . $data['deliveryman_banner_bg']))) {
+                    unlink(public_path('assets/landing/image/' . $data['deliveryman_banner_bg']));
+                }
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->deliveryman_banner_bg->move(public_path('assets/landing/image'), $imageName);
+                $data['deliveryman_banner_bg'] = $imageName;
+            }
+            DB::table('business_settings')->updateOrInsert(['key' => 'join_as_images'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_image_updated'));
+        } else if ($tab == 'download-section') {
+            $data = [];
+            $imageName = null;
+            $download = BusinessSetting::where('key', 'download_app_section')->first();
+            if ($download) {
+                $data = json_decode($download->value, true);
+            }
+            if ($request->has('image')) {
+                if (isset($data['img']) && file_exists(public_path('assets/landing/image/' . $data['img']))) {
+                    unlink(public_path('assets/landing/image/' . $data['img']));
+                }
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->image->move(public_path('assets/landing/image'), $imageName);
+                $data['img'] = $imageName;
+            }
+
+            if ($request->has('description')) {
+                $data['description'] = $request->description;
+            }
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'download_app_section'], [
+                'value' => json_encode($data)
+            ]);
+
+            Toastr::success(translate('messages.landing_page_download_app_section_updated'));
+        } else if ($tab == 'counter-section') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'counter_section'], [
+                'value' => json_encode([
+                    'app_download_count_numbers' => $request['app_download_count_numbers'],
+                    'seller_count_numbers' => $request['seller_count_numbers'],
+                    'deliveryman_count_numbers' => $request['deliveryman_count_numbers'],
+                ])
+            ]);
+
+            Toastr::success(translate('messages.landing_page_counter_section_updated'));
+        } else if ($tab == 'promotion-banner') {
+            $data = [];
+            $imageName = null;
+            $promotion_banner = BusinessSetting::where('key', 'promotion_banner')->first();
+            if ($promotion_banner) {
+                $data = json_decode($promotion_banner->value, true);
+            }
+            if (count($data) >= 6) {
+                Toastr::error(translate('messages.you_have_already_added_maximum_banner_image'));
+                return back();
+            }
+            if ($request->has('image')) {
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->image->move(public_path('assets/landing/image'), $imageName);
+            }
+            array_push($data, [
+                'img' => $imageName,
+                'title' => $request->title,
+                'sub_title' => $request->sub_title,
+            ]);
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'promotion_banner'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_promotion_banner_updated'));
+        } else if ($tab == 'module-section') {
+            $request->validate([
+                'module' => 'required',
+                'description' => 'required'
+            ]);
+            $data = [];
+            $imageName = null;
+            $preImageName = null;
+            $module_section = BusinessSetting::where('key', 'module_section')->first();
+            if ($module_section) {
+                $data = json_decode($module_section->value, true);
+                if (isset($data[$request->module]['img'])) {
+                    $preImageName = $data[$request->module]['img'];
+                }
+            }
+
+            if ($request->has('image')) {
+                if ($preImageName && file_exists(public_path('assets/landing/image') . $preImageName)) {
+                    unlink(public_path('assets/landing/image') . $preImageName);
+                }
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->image->move(public_path('assets/landing/image'), $imageName);
+            }
+
+            $data[$request->module] = [
+                'description' => $request->description,
+                'img' => $imageName ?? $preImageName
+            ];
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'module_section'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_module_section_updated'));
+        } else if ($tab == 'feature') {
+            $data = [];
+            $imageName = null;
+            $feature = BusinessSetting::where('key', 'feature')->first();
+            if ($feature) {
+                $data = json_decode($feature->value, true);
+            }
+            if ($request->has('image')) {
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->image->move(public_path('assets/landing/image'), $imageName);
+            }
+            array_push($data, [
+                'img' => $imageName,
+                'title' => $request->feature_title,
+                'feature_description' => $request->feature_description
+            ]);
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'feature'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_feature_updated'));
+        } else if ($tab == 'testimonial') {
+            $data = [];
+            $imageName = null;
+            $brandImageName = null;
+            $testimonial = BusinessSetting::where('key', 'testimonial')->first();
+            if ($testimonial) {
+                $data = json_decode($testimonial->value, true);
+            }
+            if ($request->has('image')) {
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->image->move(public_path('assets/landing/image'), $imageName);
+            }
+            if ($request->has('brand_image')) {
+                $brandImageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->brand_image->move(public_path('assets/landing/image'), $brandImageName);
+            }
+            array_push($data, [
+                'img' => $imageName,
+                'brand_image' => $brandImageName,
+                'name' => $request->reviewer_name,
+                'position' => $request->reviewer_designation,
+                'detail' => $request->review,
+            ]);
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'testimonial'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_testimonial_updated'));
+        } else if ($tab == 'image') {
+            $data = [];
+            $images = BusinessSetting::where('key', 'landing_page_images')->first();
+            if ($images) {
+                $data = json_decode($images->value, true);
+            }
+            if ($request->has('top_content_image')) {
+                if (isset($data['top_content_image']) && file_exists(public_path('assets/landing/image/' . $data['top_content_image']))) {
+                    unlink(public_path('assets/landing/image/' . $data['top_content_image']));
+                }
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->top_content_image->move(public_path('assets/landing/image'), $imageName);
+                $data['top_content_image'] = $imageName;
+            }
+            if ($request->has('about_us_image')) {
+                if (isset($data['about_us_image']) && file_exists(public_path('assets/landing/image/' . $data['about_us_image']))) {
+                    unlink(public_path('assets/landing/image/' . $data['about_us_image']));
+                }
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->about_us_image->move(public_path('assets/landing/image'), $imageName);
+                $data['about_us_image'] = $imageName;
+            }
+
+            if ($request->has('feature_section_image')) {
+                if (isset($data['feature_section_image']) && file_exists(public_path('assets/landing/image/' . $data['feature_section_image']))) {
+                    unlink(public_path('assets/landing/image/' . $data['feature_section_image']));
+                }
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->feature_section_image->move(public_path('assets/landing/image'), $imageName);
+                $data['feature_section_image'] = $imageName;
+            }
+            if ($request->has('mobile_app_section_image')) {
+                if (isset($data['mobile_app_section_image']) && file_exists(public_path('assets/landing/image/' . $data['mobile_app_section_image']))) {
+                    unlink(public_path('assets/landing/image/' . $data['mobile_app_section_image']));
+                }
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->mobile_app_section_image->move(public_path('assets/landing/image'), $imageName);
+                $data['mobile_app_section_image'] = $imageName;
+            }
+
+            if ($request->has('contact_us_image')) {
+                if (isset($data['contact_us_image']) && file_exists(public_path('assets/landing/image/' . $data['contact_us_image']))) {
+                    unlink(public_path('assets/landing/image/' . $data['contact_us_image']));
+                }
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->contact_us_image->move(public_path('assets/landing/image'), $imageName);
+                $data['contact_us_image'] = $imageName;
+            }
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'landing_page_images'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_image_updated'));
+        } else if ($tab == 'background-change') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'backgroundChange'], [
+                'value' => json_encode([
+                    'primary_1_hex' => $request['header-bg'],
+                    'primary_1_rgb' => Helpers::hex_to_rbg($request['header-bg']),
+                    'primary_2_hex' => $request['footer-bg'],
+                    'primary_2_rgb' => Helpers::hex_to_rbg($request['footer-bg']),
+                ])
+            ]);
+            Toastr::success(translate('messages.background_updated'));
+        } else if ($tab == 'web-app') {
+            $data = [];
+            $images = BusinessSetting::where('key', 'web_app_landing_page_settings')->first();
+            if ($images) {
+                $data = json_decode($images->value, true);
+            }
+            if ($request->has('top_content_image')) {
+                if (isset($data['top_content_image']) && file_exists(public_path('assets/landing/image/' . $data['top_content_image']))) {
+                    unlink(public_path('assets/landing/image/' . $data['top_content_image']));
+                }
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->top_content_image->move(public_path('assets/landing/image'), $imageName);
+                $data['top_content_image'] = $imageName;
+            }
+
+            if ($request->has('mobile_app_section_image')) {
+                if (isset($data['mobile_app_section_image']) && file_exists(public_path('assets/landing/image/' . $data['mobile_app_section_image']))) {
+                    unlink(public_path('assets/landing/image/' . $data['mobile_app_section_image']));
+                }
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $request->mobile_app_section_image->move(public_path('assets/landing/image'), $imageName);
+                $data['mobile_app_section_image'] = $imageName;
+            }
+            DB::table('business_settings')->updateOrInsert(['key' => 'web_app_landing_page_settings'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.web_app_landing_page_settings'));
+        } else if ($tab == 'react_header') {
+            $data = null;
+            $image = BusinessSetting::where('key', 'react_header_banner')->first();
+            if ($image) {
+                $data = $image->value;
+            }
+            $image_name = $data ?? \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+            if ($request->has('react_header_banner')) {
+                // $image_name = ;
+                $data = Helpers::update('react_landing/', $image_name, 'png', $request->file('react_header_banner')) ?? null;
+            }
+            DB::table('business_settings')->updateOrInsert(['key' => 'react_header_banner'], [
+                'value' => $data
+            ]);
+            Toastr::success(translate('Landing page header banner updated'));
+        } else if ($tab == 'hero-section') {
+            $data = [];
+            $hero_section = BusinessSetting::where('key', 'hero_section')->first();
+            $data = [
+                'hero_section_heading' => $request->hero_section_heading ?? $hero_section['hero_section_heading'],
+                'hero_section_slogan' => $request->hero_section_slogan ?? $hero_section['hero_section_slogan'],
+                'hero_section_short_description' => $request->hero_section_short_description ?? $hero_section['hero_section_short_description'],
+            ];
+            DB::table('business_settings')->updateOrInsert(['key' => 'hero_section'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_hero_section_updated'));
+        } else if ($tab == 'full-banner') {
+            $data = [];
+            $banner_section_full = BusinessSetting::where('key', 'banner_section_full')->first();
+            $imageName = null;
+            if ($banner_section_full) {
+                $data = json_decode($banner_section_full->value, true);
+                $imageName = $data['banner_section_img_full'] ?? null;
+            }
+            if ($request->has('banner_section_img_full')) {
+                if (empty($imageName)) {
+                    $imageName = Helpers::upload('react_landing/', 'png', $request->file('banner_section_img_full'));
+                } else {
+                    $imageName = Helpers::update('react_landing/', $data['banner_section_img_full'], 'png', $request->file('banner_section_img_full'));
+                }
+            }
+            $data = [
+                'banner_section_img_full' => $imageName,
+                'full_banner_section_title' => $request->full_banner_section_title ?? $banner_section_full['full_banner_section_title'],
+                'full_banner_section_sub_title' => $request->full_banner_section_sub_title ?? $banner_section_full['full_banner_section_sub_title'],
+            ];
+            DB::table('business_settings')->updateOrInsert(['key' => 'banner_section_full'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_banner_section_updated'));
+        } else if ($tab == 'delivery-service-section') {
+            $data = [];
+            $delivery_service_section = BusinessSetting::where('key', 'delivery_service_section')->first();
+            $imageName = null;
+            if ($delivery_service_section) {
+                $data = json_decode($delivery_service_section->value, true);
+                $imageName = $data['delivery_service_section_image'] ?? null;
+            }
+            if ($request->has('delivery_service_section_image')) {
+                if (empty($imageName)) {
+                    $imageName = Helpers::upload('react_landing/', 'png', $request->file('delivery_service_section_image'));
+                } else {
+                    $imageName = Helpers::update('react_landing/', $data['delivery_service_section_image'], 'png', $request->file('delivery_service_section_image'));
+                }
+            }
+            $data = [
+                'delivery_service_section_image' => $imageName,
+                'delivery_service_section_title' => $request->delivery_service_section_title ?? $delivery_service_section['delivery_service_section_title'],
+                'delivery_service_section_description' => $request->delivery_service_section_description ?? $delivery_service_section['delivery_service_section_description'],
+            ];
+            DB::table('business_settings')->updateOrInsert(['key' => 'delivery_service_section'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_delivery_service_section_updated'));
+        } else if ($tab == 'discount-banner') {
+            $data = [];
+            $discount_banner = BusinessSetting::where('key', 'discount_banner')->first();
+            $imageName = null;
+            if ($discount_banner) {
+                $data = json_decode($discount_banner->value, true);
+                $imageName = $data['img'] ?? null;
+            }
+            if ($request->has('img')) {
+                if (empty($imageName)) {
+                    $imageName = Helpers::upload('react_landing/', 'png', $request->file('img'));
+                } else {
+                    $imageName = Helpers::update('react_landing/', $data['img'], 'png', $request->file('img'));
+                }
+            }
+            $data = [
+                'img' => $imageName,
+                'title' => $request->title ?? $discount_banner['title'],
+                'sub_title' => $request->sub_title ?? $discount_banner['sub_title'],
+            ];
+            DB::table('business_settings')->updateOrInsert(['key' => 'discount_banner'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_discount_banner_section_updated'));
+        } else if ($tab == 'banner-section-half') {
+
+            $data = [];
+            $imageName = null;
+            $banner_section_half = BusinessSetting::where('key', 'banner_section_half')->first();
+            if ($banner_section_half) {
+                $data = json_decode($banner_section_half->value, true);
+            }
+
+            foreach ($request->banner_section_half  as $key => $value) {
+
+                if ($request->hasfile("banner_section_half.{$key}.img")) {
+                    if (isset($data[$key]['img']) && Storage::disk('public')->exists('react_landing/' . $data[$key]['img'])) {
+                        Storage::disk('public')->delete('react_landing/' . $data[$key]['img']);
+                    }
+
+                    $value['img'] = Helpers::upload('react_landing/', 'png', $request->file("banner_section_half.{$key}.img"));
+                } elseif (isset($data[$key]['img'])) {
+                    $value['img'] = $data[$key]['img'];
+                } else {
+                    $value['img'] = null;
+                }
+                $data[$key] = $value;
+            }
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'banner_section_half'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_banner_section_updated'));
+        } else if ($tab == 'app_section_image') {
+            $data = null;
+            $image = BusinessSetting::where('key', 'app_section_image')->first();
+            if ($image) {
+                $data = $image->value;
+            }
+            $image_name = $data ?? \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+            if ($request->has('app_section_image')) {
+                $data = Helpers::update('react_landing/', $image_name, 'png', $request->file('app_section_image')) ?? null;
+            }
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_section_image'], [
+                'value' => $data
+            ]);
+            Toastr::success(translate('App section image updated'));
+        } else if ($tab == 'footer_logo') {
+            $data = null;
+            $image = BusinessSetting::where('key', 'footer_logo')->first();
+            if ($image) {
+                $data = $image->value;
+            }
+            $image_name = $data ?? \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+            if ($request->has('footer_logo')) {
+                $data = Helpers::update('react_landing/', $image_name, 'png', $request->file('footer_logo')) ?? null;
+            }
+            DB::table('business_settings')->updateOrInsert(['key' => 'footer_logo'], [
+                'value' => $data
+            ]);
+            Toastr::success(translate('Footer logo updated'));
+        } else if ($tab == 'react-feature') {
+            $data = [];
+            $imageName = null;
+            $feature = BusinessSetting::where('key', 'react_feature')->first();
+            if ($feature) {
+                $data = json_decode($feature->value, true);
+            }
+            if ($request->has('image')) {
+                $imageName = Helpers::upload('react_landing/feature/', 'png', $request->file('image'));
+            }
+            array_push($data, [
+                'img' => $imageName,
+                'title' => $request->feature_title,
+                'feature_description' => $request->feature_description
+            ]);
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'react_feature'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.landing_page_feature_updated'));
+        } else if ($tab == 'app-download-button') {
+            $data = [];
+            $feature = BusinessSetting::where('key', 'app_download_button')->first();
+            if ($feature) {
+                $data = json_decode($feature->value, true);
+            }
+            array_push($data, [
+                'button_text' => $request->button_text,
+                'link' => $request->link
+            ]);
+
+            DB::table('business_settings')->updateOrInsert(['key' => 'app_download_button'], [
+                'value' => json_encode($data)
+            ]);
+            Toastr::success(translate('messages.app_download_button_updated'));
+        }
+        return back();
+    }
+
+    public function delete_landing_page_settings($tab, $key)
+    {
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
+
+        $item = BusinessSetting::where('key', $tab)->first();
+        $data = $item ? json_decode($item->value, true) : null;
+        if ($data && array_key_exists($key, $data)) {
+            if (isset($data[$key]['img']) && file_exists(public_path('assets/landing/image') . $data[$key]['img'])) {
+                unlink(public_path('assets/landing/image') . $data[$key]['img']);
+            }
+            array_splice($data, $key, 1);
+
+            $item->value = json_encode($data);
+            $item->save();
+            Toastr::success(translate('messages.' . $tab) . ' ' . translate('messages.deleted'));
+            return back();
+        }
+        Toastr::error(translate('messages.not_found'));
+        return back();
+    }
+
+
+    public function currency_index()
+    {
+        return view('admin-views.business-settings.currency-index');
+    }
+
+    public function currency_store(Request $request)
+    {
+        $request->validate([
+            'currency_code' => 'required|unique:currencies',
+        ]);
+
+        Currency::create([
+            "country" => $request['country'],
+            "currency_code" => $request['currency_code'],
+            "currency_symbol" => $request['symbol'],
+            "exchange_rate" => $request['exchange_rate'],
+        ]);
+        Toastr::success(translate('messages.currency_added_successfully'));
+        return back();
+    }
+
+    public function currency_edit($id)
+    {
+        $currency = Currency::find($id);
+        return view('admin-views.business-settings.currency-update', compact('currency'));
+    }
+
+    public function currency_update(Request $request, $id)
+    {
+        Currency::where(['id' => $id])->update([
+            "country" => $request['country'],
+            "currency_code" => $request['currency_code'],
+            "currency_symbol" => $request['symbol'],
+            "exchange_rate" => $request['exchange_rate'],
+        ]);
+        Toastr::success(translate('messages.currency_updated_successfully'));
+        return redirect('store-panel/business-settings/currency-add');
+    }
+
+    public function currency_delete($id)
+    {
+        Currency::where(['id' => $id])->delete();
+        Toastr::success(translate('messages.currency_deleted_successfully'));
+        return back();
+    }
 
     private function update_data($request, $key_data){
         $data = DataSetting::firstOrNew(
             ['key' =>  $key_data,
-                'type' =>  'admin_landing_page'],
+            'type' =>  'admin_landing_page'],
         );
 
         $data->value = $request->{$key_data}[array_search('default', $request->lang)];
@@ -400,7 +1889,7 @@ class BusinessSettingsController extends Controller
     private function policy_status_update($key_data , $status){
         $data = DataSetting::firstOrNew(
             ['key' =>  $key_data,
-                'type' =>  'admin_landing_page'],
+            'type' =>  'admin_landing_page'],
         );
         $data->value = $status;
         $data->save();
@@ -527,12 +2016,11 @@ class BusinessSettingsController extends Controller
     public function update_fcm(Request $request)
     {
         DB::table('business_settings')->updateOrInsert(['key' => 'fcm_project_id'], [
-            'value' => 'snowdeliverywebapp'
+            'value' => $request['projectId']
         ]);
-//            'value' => '$request['projectId']
 
         DB::table('business_settings')->updateOrInsert(['key' => 'push_notification_key'], [
-            'value' => $request['push_notification_key'] ?? "AAAAlJziC6Q:APA91bH_Xe6Uf9ThZkjfaKG24bW59HCowmxVEWhB-TR3WrgwOrJ8MsAScYbVo4HvqjK0Zjv-ytR2P5oEEwQLShdKjLolSRZ2oTWm6ISnH4_MtSuwNNL7DUl5pyHwD7oAAGnpedqxOOd5"
+            'value' => $request['push_notification_key']
         ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'fcm_credentials'], [
@@ -2803,7 +4291,7 @@ class BusinessSettingsController extends Controller
             $earning_dm_sub_title->value = $request->earning_dm_sub_title[array_search('default', $request->lang)];
             $earning_dm_sub_title->save();
 
-            $earning_dm_button_name = DataSetting::where('type', 'react_landing_page')->where('key', 'earning_dm_button_name')->first();
+             $earning_dm_button_name = DataSetting::where('type', 'react_landing_page')->where('key', 'earning_dm_button_name')->first();
             if ($earning_dm_button_name == null) {
                 $earning_dm_button_name = new DataSetting();
             }
@@ -2878,7 +4366,7 @@ class BusinessSettingsController extends Controller
                     }
                 }
 
-                if ($default_lang == $key && !($request->earning_dm_button_name[$index])) {
+                                if ($default_lang == $key && !($request->earning_dm_button_name[$index])) {
                     if ($key != 'default') {
                         Translation::updateOrInsert(
                             [
@@ -2964,415 +4452,415 @@ class BusinessSettingsController extends Controller
             $testimonial->save();
             Toastr::success(translate('messages.testimonial_added_successfully'));
         } elseif ($tab == 'business-section') {
-            $business_title = DataSetting::where('type', 'react_landing_page')->where('key', 'business_title')->first();
-            if ($business_title == null) {
-                $business_title = new DataSetting();
-            }
+                $business_title = DataSetting::where('type', 'react_landing_page')->where('key', 'business_title')->first();
+                if ($business_title == null) {
+                    $business_title = new DataSetting();
+                }
 
-            $business_title->key = 'business_title';
-            $business_title->type = 'react_landing_page';
-            $business_title->value = $request->business_title[array_search('default', $request->lang)];
-            $business_title->save();
+                $business_title->key = 'business_title';
+                $business_title->type = 'react_landing_page';
+                $business_title->value = $request->business_title[array_search('default', $request->lang)];
+                $business_title->save();
 
-            $business_sub_title = DataSetting::where('type', 'react_landing_page')->where('key', 'business_sub_title')->first();
-            if ($business_sub_title == null) {
-                $business_sub_title = new DataSetting();
-            }
+                $business_sub_title = DataSetting::where('type', 'react_landing_page')->where('key', 'business_sub_title')->first();
+                if ($business_sub_title == null) {
+                    $business_sub_title = new DataSetting();
+                }
 
-            $business_sub_title->key = 'business_sub_title';
-            $business_sub_title->type = 'react_landing_page';
-            $business_sub_title->value = $request->business_sub_title[array_search('default', $request->lang)];
-            $business_sub_title->save();
+                $business_sub_title->key = 'business_sub_title';
+                $business_sub_title->type = 'react_landing_page';
+                $business_sub_title->value = $request->business_sub_title[array_search('default', $request->lang)];
+                $business_sub_title->save();
 
-            $business_image = DataSetting::where('type', 'react_landing_page')->where('key', 'business_image')->first();
-            if ($business_image == null) {
-                $business_image = new DataSetting();
-            }
-            $business_image->key = 'business_image';
-            $business_image->type = 'react_landing_page';
-            $business_image->value = $request->has('image') ? Helpers::update('business_image/', $business_image->value, 'png', $request->file('image')) : $business_image->value;
-            $business_image->save();
+                $business_image = DataSetting::where('type', 'react_landing_page')->where('key', 'business_image')->first();
+                if ($business_image == null) {
+                    $business_image = new DataSetting();
+                }
+                $business_image->key = 'business_image';
+                $business_image->type = 'react_landing_page';
+                $business_image->value = $request->has('image') ? Helpers::update('business_image/', $business_image->value, 'png', $request->file('image')) : $business_image->value;
+                $business_image->save();
 
-            $data = [];
-            $default_lang = str_replace('_', '-', app()->getLocale());
-            foreach ($request->lang as $index => $key) {
-                if ($default_lang == $key && !($request->business_title[$index])) {
-                    if ($key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $business_title->id,
-                                'locale' => $key,
-                                'key' => 'business_title'
-                            ],
-                            ['value' => $business_title?->getRawOriginal('value')]
-                        );
+                $data = [];
+                $default_lang = str_replace('_', '-', app()->getLocale());
+                foreach ($request->lang as $index => $key) {
+                    if ($default_lang == $key && !($request->business_title[$index])) {
+                        if ($key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $business_title->id,
+                                    'locale' => $key,
+                                    'key' => 'business_title'
+                                ],
+                                ['value' => $business_title?->getRawOriginal('value')]
+                            );
+                        }
+                    } else {
+                        if ($request->business_title[$index] && $key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $business_title->id,
+                                    'locale' => $key,
+                                    'key' => 'business_title'
+                                ],
+                                ['value' => $request->business_title[$index]]
+                            );
+                        }
                     }
-                } else {
-                    if ($request->business_title[$index] && $key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $business_title->id,
-                                'locale' => $key,
-                                'key' => 'business_title'
-                            ],
-                            ['value' => $request->business_title[$index]]
-                        );
+                    if ($default_lang == $key && !($request->business_sub_title[$index])) {
+                        if ($key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $business_sub_title->id,
+                                    'locale' => $key,
+                                    'key' => 'business_sub_title'
+                                ],
+                                ['value' => $business_sub_title?->getRawOriginal('value')]
+                            );
+                        }
+                    } else {
+                        if ($request->business_sub_title[$index] && $key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $business_sub_title->id,
+                                    'locale' => $key,
+                                    'key' => 'business_sub_title'
+                                ],
+                                ['value' => $request->business_sub_title[$index]]
+                            );
+                        }
                     }
                 }
-                if ($default_lang == $key && !($request->business_sub_title[$index])) {
-                    if ($key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $business_sub_title->id,
-                                'locale' => $key,
-                                'key' => 'business_sub_title'
-                            ],
-                            ['value' => $business_sub_title?->getRawOriginal('value')]
-                        );
-                    }
-                } else {
-                    if ($request->business_sub_title[$index] && $key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $business_sub_title->id,
-                                'locale' => $key,
-                                'key' => 'business_sub_title'
-                            ],
-                            ['value' => $request->business_sub_title[$index]]
-                        );
-                    }
-                }
-            }
 
-            DB::table('data_settings')->updateOrInsert(['key' => 'download_business_app_links', 'type' => 'react_landing_page'], [
-                'value' => json_encode([
-                    'seller_playstore_url_status' => $request['seller_playstore_url_status'],
-                    'seller_playstore_url' => $request['seller_playstore_url'],
-                    'seller_appstore_url_status' => $request['seller_appstore_url_status'],
-                    'seller_appstore_url' => $request['seller_appstore_url'],
-                    'dm_playstore_url_status' => $request['dm_playstore_url_status'],
-                    'dm_playstore_url' => $request['dm_playstore_url'],
-                    'dm_appstore_url_status' => $request['dm_appstore_url_status'],
-                    'dm_appstore_url' => $request['dm_appstore_url'],
-                ])
-            ]);
+                DB::table('data_settings')->updateOrInsert(['key' => 'download_business_app_links', 'type' => 'react_landing_page'], [
+                    'value' => json_encode([
+                        'seller_playstore_url_status' => $request['seller_playstore_url_status'],
+                        'seller_playstore_url' => $request['seller_playstore_url'],
+                        'seller_appstore_url_status' => $request['seller_appstore_url_status'],
+                        'seller_appstore_url' => $request['seller_appstore_url'],
+                        'dm_playstore_url_status' => $request['dm_playstore_url_status'],
+                        'dm_playstore_url' => $request['dm_playstore_url'],
+                        'dm_appstore_url_status' => $request['dm_appstore_url_status'],
+                        'dm_appstore_url' => $request['dm_appstore_url'],
+                    ])
+                ]);
 
 
-            Toastr::success(translate('messages.business_section_updated'));
+                Toastr::success(translate('messages.business_section_updated'));
         } elseif ($tab == 'header-section') {
-            $header_title = DataSetting::where('type', 'react_landing_page')->where('key', 'header_title')->first();
-            if ($header_title == null) {
-                $header_title = new DataSetting();
-            }
+                $header_title = DataSetting::where('type', 'react_landing_page')->where('key', 'header_title')->first();
+                if ($header_title == null) {
+                    $header_title = new DataSetting();
+                }
 
-            $header_title->key = 'header_title';
-            $header_title->type = 'react_landing_page';
-            $header_title->value = $request->header_title[array_search('default', $request->lang)];
-            $header_title->save();
+                $header_title->key = 'header_title';
+                $header_title->type = 'react_landing_page';
+                $header_title->value = $request->header_title[array_search('default', $request->lang)];
+                $header_title->save();
 
-            $header_sub_title = DataSetting::where('type', 'react_landing_page')->where('key', 'header_sub_title')->first();
-            if ($header_sub_title == null) {
-                $header_sub_title = new DataSetting();
-            }
+                $header_sub_title = DataSetting::where('type', 'react_landing_page')->where('key', 'header_sub_title')->first();
+                if ($header_sub_title == null) {
+                    $header_sub_title = new DataSetting();
+                }
 
-            $header_sub_title->key = 'header_sub_title';
-            $header_sub_title->type = 'react_landing_page';
-            $header_sub_title->value = $request->header_sub_title[array_search('default', $request->lang)];
-            $header_sub_title->save();
+                $header_sub_title->key = 'header_sub_title';
+                $header_sub_title->type = 'react_landing_page';
+                $header_sub_title->value = $request->header_sub_title[array_search('default', $request->lang)];
+                $header_sub_title->save();
 
-            $header_tag_line = DataSetting::where('type', 'react_landing_page')->where('key', 'header_tag_line')->first();
-            if ($header_tag_line == null) {
-                $header_tag_line = new DataSetting();
-            }
+                $header_tag_line = DataSetting::where('type', 'react_landing_page')->where('key', 'header_tag_line')->first();
+                if ($header_tag_line == null) {
+                    $header_tag_line = new DataSetting();
+                }
 
-            $header_tag_line->key = 'header_tag_line';
-            $header_tag_line->type = 'react_landing_page';
-            $header_tag_line->value = $request->header_tag_line[array_search('default', $request->lang)];
-            $header_tag_line->save();
+                $header_tag_line->key = 'header_tag_line';
+                $header_tag_line->type = 'react_landing_page';
+                $header_tag_line->value = $request->header_tag_line[array_search('default', $request->lang)];
+                $header_tag_line->save();
 
-            $header_icon = DataSetting::where('type', 'react_landing_page')->where('key', 'header_icon')->first();
-            if ($header_icon == null) {
-                $header_icon = new DataSetting();
-            }
-            $header_icon->key = 'header_icon';
-            $header_icon->type = 'react_landing_page';
-            $header_icon->value = $request->has('image') ? Helpers::update('header_icon/', $header_icon->value, 'png', $request->file('image')) : $header_icon->value;
-            $header_icon->save();
+                $header_icon = DataSetting::where('type', 'react_landing_page')->where('key', 'header_icon')->first();
+                if ($header_icon == null) {
+                    $header_icon = new DataSetting();
+                }
+                $header_icon->key = 'header_icon';
+                $header_icon->type = 'react_landing_page';
+                $header_icon->value = $request->has('image') ? Helpers::update('header_icon/', $header_icon->value, 'png', $request->file('image')) : $header_icon->value;
+                $header_icon->save();
 
-            $header_banner = DataSetting::where('type', 'react_landing_page')->where('key', 'header_banner')->first();
-            if ($header_banner == null) {
-                $header_banner = new DataSetting();
-            }
-            $header_banner->key = 'header_banner';
-            $header_banner->type = 'react_landing_page';
-            $header_banner->value = $request->has('banner_image') ? Helpers::update('header_banner/', $header_banner->value, 'png', $request->file('banner_image')) : $header_banner->value;
-            $header_banner->save();
+                $header_banner = DataSetting::where('type', 'react_landing_page')->where('key', 'header_banner')->first();
+                if ($header_banner == null) {
+                    $header_banner = new DataSetting();
+                }
+                $header_banner->key = 'header_banner';
+                $header_banner->type = 'react_landing_page';
+                $header_banner->value = $request->has('banner_image') ? Helpers::update('header_banner/', $header_banner->value, 'png', $request->file('banner_image')) : $header_banner->value;
+                $header_banner->save();
 
-            $default_lang = str_replace('_', '-', app()->getLocale());
-            foreach ($request->lang as $index => $key) {
-                if ($default_lang == $key && !($request->header_title[$index])) {
-                    if ($key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $header_title->id,
-                                'locale' => $key,
-                                'key' => 'header_title'
-                            ],
-                            ['value' => $header_title?->getRawOriginal('value')]
-                        );
+                $default_lang = str_replace('_', '-', app()->getLocale());
+                foreach ($request->lang as $index => $key) {
+                    if ($default_lang == $key && !($request->header_title[$index])) {
+                        if ($key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $header_title->id,
+                                    'locale' => $key,
+                                    'key' => 'header_title'
+                                ],
+                                ['value' => $header_title?->getRawOriginal('value')]
+                            );
+                        }
+                    } else {
+                        if ($request->header_title[$index] && $key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $header_title->id,
+                                    'locale' => $key,
+                                    'key' => 'header_title'
+                                ],
+                                ['value' => $request->header_title[$index]]
+                            );
+                        }
                     }
-                } else {
-                    if ($request->header_title[$index] && $key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $header_title->id,
-                                'locale' => $key,
-                                'key' => 'header_title'
-                            ],
-                            ['value' => $request->header_title[$index]]
-                        );
+                    if ($default_lang == $key && !($request->header_sub_title[$index])) {
+                        if ($key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $header_sub_title->id,
+                                    'locale' => $key,
+                                    'key' => 'header_sub_title'
+                                ],
+                                ['value' => $header_sub_title?->getRawOriginal('value')]
+                            );
+                        }
+                    } else {
+                        if ($request->header_sub_title[$index] && $key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $header_sub_title->id,
+                                    'locale' => $key,
+                                    'key' => 'header_sub_title'
+                                ],
+                                ['value' => $request->header_sub_title[$index]]
+                            );
+                        }
+                    }
+                    if ($default_lang == $key && !($request->header_tag_line[$index])) {
+                        if ($key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $header_tag_line->id,
+                                    'locale' => $key,
+                                    'key' => 'header_tag_line'
+                                ],
+                                ['value' => $header_tag_line->getRawOriginal('value')]
+                            );
+                        }
+                    } else {
+                        if ($request->header_tag_line[$index] && $key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $header_tag_line->id,
+                                    'locale' => $key,
+                                    'key' => 'header_tag_line'
+                                ],
+                                ['value' => $request->header_tag_line[$index]]
+                            );
+                        }
                     }
                 }
-                if ($default_lang == $key && !($request->header_sub_title[$index])) {
-                    if ($key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $header_sub_title->id,
-                                'locale' => $key,
-                                'key' => 'header_sub_title'
-                            ],
-                            ['value' => $header_sub_title?->getRawOriginal('value')]
-                        );
-                    }
-                } else {
-                    if ($request->header_sub_title[$index] && $key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $header_sub_title->id,
-                                'locale' => $key,
-                                'key' => 'header_sub_title'
-                            ],
-                            ['value' => $request->header_sub_title[$index]]
-                        );
-                    }
-                }
-                if ($default_lang == $key && !($request->header_tag_line[$index])) {
-                    if ($key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $header_tag_line->id,
-                                'locale' => $key,
-                                'key' => 'header_tag_line'
-                            ],
-                            ['value' => $header_tag_line->getRawOriginal('value')]
-                        );
-                    }
-                } else {
-                    if ($request->header_tag_line[$index] && $key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $header_tag_line->id,
-                                'locale' => $key,
-                                'key' => 'header_tag_line'
-                            ],
-                            ['value' => $request->header_tag_line[$index]]
-                        );
-                    }
-                }
-            }
 
-            Toastr::success(translate('messages.header_section_updated'));
+                Toastr::success(translate('messages.header_section_updated'));
         } elseif ($tab == 'company-section') {
-            $company_title = DataSetting::where('type', 'react_landing_page')->where('key', 'company_title')->first();
-            if ($company_title == null) {
-                $company_title = new DataSetting();
-            }
+                $company_title = DataSetting::where('type', 'react_landing_page')->where('key', 'company_title')->first();
+                if ($company_title == null) {
+                    $company_title = new DataSetting();
+                }
 
-            $company_title->key = 'company_title';
-            $company_title->type = 'react_landing_page';
-            $company_title->value = $request->company_title[array_search('default', $request->lang)];
-            $company_title->save();
+                $company_title->key = 'company_title';
+                $company_title->type = 'react_landing_page';
+                $company_title->value = $request->company_title[array_search('default', $request->lang)];
+                $company_title->save();
 
-            $company_sub_title = DataSetting::where('type', 'react_landing_page')->where('key', 'company_sub_title')->first();
-            if ($company_sub_title == null) {
-                $company_sub_title = new DataSetting();
-            }
+                $company_sub_title = DataSetting::where('type', 'react_landing_page')->where('key', 'company_sub_title')->first();
+                if ($company_sub_title == null) {
+                    $company_sub_title = new DataSetting();
+                }
 
-            $company_sub_title->key = 'company_sub_title';
-            $company_sub_title->type = 'react_landing_page';
-            $company_sub_title->value = $request->company_sub_title[array_search('default', $request->lang)];
-            $company_sub_title->save();
+                $company_sub_title->key = 'company_sub_title';
+                $company_sub_title->type = 'react_landing_page';
+                $company_sub_title->value = $request->company_sub_title[array_search('default', $request->lang)];
+                $company_sub_title->save();
 
-            $company_description = DataSetting::where('type', 'react_landing_page')->where('key', 'company_description')->first();
-            if ($company_description == null) {
-                $company_description = new DataSetting();
-            }
+                $company_description = DataSetting::where('type', 'react_landing_page')->where('key', 'company_description')->first();
+                if ($company_description == null) {
+                    $company_description = new DataSetting();
+                }
 
-            $company_description->key = 'company_description';
-            $company_description->type = 'react_landing_page';
-            $company_description->value = $request->company_description[array_search('default', $request->lang)];
-            $company_description->save();
+                $company_description->key = 'company_description';
+                $company_description->type = 'react_landing_page';
+                $company_description->value = $request->company_description[array_search('default', $request->lang)];
+                $company_description->save();
 
-            $company_button_name = DataSetting::where('type', 'react_landing_page')->where('key', 'company_button_name')->first();
-            if ($company_button_name == null) {
-                $company_button_name = new DataSetting();
-            }
+                $company_button_name = DataSetting::where('type', 'react_landing_page')->where('key', 'company_button_name')->first();
+                if ($company_button_name == null) {
+                    $company_button_name = new DataSetting();
+                }
 
-            $company_button_name->key = 'company_button_name';
-            $company_button_name->type = 'react_landing_page';
-            $company_button_name->value = $request->company_button_name[array_search('default', $request->lang)];
-            $company_button_name->save();
+                $company_button_name->key = 'company_button_name';
+                $company_button_name->type = 'react_landing_page';
+                $company_button_name->value = $request->company_button_name[array_search('default', $request->lang)];
+                $company_button_name->save();
 
-            $company_button_url = DataSetting::where('type', 'react_landing_page')->where('key', 'company_button_url')->first();
-            if ($company_button_url == null) {
-                $company_button_url = new DataSetting();
-            }
+                $company_button_url = DataSetting::where('type', 'react_landing_page')->where('key', 'company_button_url')->first();
+                if ($company_button_url == null) {
+                    $company_button_url = new DataSetting();
+                }
 
-            $company_button_url->key = 'company_button_url';
-            $company_button_url->type = 'react_landing_page';
-            $company_button_url->value = $request->company_button_url;
-            $company_button_url->save();
+                $company_button_url->key = 'company_button_url';
+                $company_button_url->type = 'react_landing_page';
+                $company_button_url->value = $request->company_button_url;
+                $company_button_url->save();
 
-            $default_lang = str_replace('_', '-', app()->getLocale());
-            foreach ($request->lang as $index => $key) {
-                if ($default_lang == $key && !($request->company_title[$index])) {
-                    if ($key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $company_title->id,
-                                'locale' => $key,
-                                'key' => 'company_title'
-                            ],
-                            ['value' => $company_title?->getRawOriginal('value')]
-                        );
+                $default_lang = str_replace('_', '-', app()->getLocale());
+                foreach ($request->lang as $index => $key) {
+                    if ($default_lang == $key && !($request->company_title[$index])) {
+                        if ($key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $company_title->id,
+                                    'locale' => $key,
+                                    'key' => 'company_title'
+                                ],
+                                ['value' => $company_title?->getRawOriginal('value')]
+                            );
+                        }
+                    } else {
+                        if ($request->company_title[$index] && $key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $company_title->id,
+                                    'locale' => $key,
+                                    'key' => 'company_title'
+                                ],
+                                ['value' => $request->company_title[$index]]
+                            );
+                        }
                     }
-                } else {
-                    if ($request->company_title[$index] && $key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $company_title->id,
-                                'locale' => $key,
-                                'key' => 'company_title'
-                            ],
-                            ['value' => $request->company_title[$index]]
-                        );
+                    if ($default_lang == $key && !($request->company_sub_title[$index])) {
+                        if ($key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $company_sub_title->id,
+                                    'locale' => $key,
+                                    'key' => 'company_sub_title'
+                                ],
+                                ['value' => $company_sub_title?->getRawOriginal('value')]
+                            );
+                        }
+                    } else {
+                        if ($request->company_sub_title[$index] && $key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $company_sub_title->id,
+                                    'locale' => $key,
+                                    'key' => 'company_sub_title'
+                                ],
+                                ['value' => $request->company_sub_title[$index]]
+                            );
+                        }
+                    }
+                    if ($default_lang == $key && !($request->company_description[$index])) {
+                        if ($key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $company_description->id,
+                                    'locale' => $key,
+                                    'key' => 'company_description'
+                                ],
+                                ['value' => $company_description->getRawOriginal('value')]
+                            );
+                        }
+                    } else {
+                        if ($request->company_description[$index] && $key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $company_description->id,
+                                    'locale' => $key,
+                                    'key' => 'company_description'
+                                ],
+                                ['value' => $request->company_description[$index]]
+                            );
+                        }
+                    }
+                    if ($default_lang == $key && !($request->company_button_name[$index])) {
+                        if ($key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $company_button_name->id,
+                                    'locale' => $key,
+                                    'key' => 'company_button_name'
+                                ],
+                                ['value' => $company_button_name->getRawOriginal('value')]
+                            );
+                        }
+                    } else {
+                        if ($request->company_button_name[$index] && $key != 'default') {
+                            Translation::updateOrInsert(
+                                [
+                                    'translationable_type' => 'App\Models\DataSetting',
+                                    'translationable_id' => $company_button_name->id,
+                                    'locale' => $key,
+                                    'key' => 'company_button_name'
+                                ],
+                                ['value' => $request->company_button_name[$index]]
+                            );
+                        }
                     }
                 }
-                if ($default_lang == $key && !($request->company_sub_title[$index])) {
-                    if ($key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $company_sub_title->id,
-                                'locale' => $key,
-                                'key' => 'company_sub_title'
-                            ],
-                            ['value' => $company_sub_title?->getRawOriginal('value')]
-                        );
-                    }
-                } else {
-                    if ($request->company_sub_title[$index] && $key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $company_sub_title->id,
-                                'locale' => $key,
-                                'key' => 'company_sub_title'
-                            ],
-                            ['value' => $request->company_sub_title[$index]]
-                        );
-                    }
-                }
-                if ($default_lang == $key && !($request->company_description[$index])) {
-                    if ($key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $company_description->id,
-                                'locale' => $key,
-                                'key' => 'company_description'
-                            ],
-                            ['value' => $company_description->getRawOriginal('value')]
-                        );
-                    }
-                } else {
-                    if ($request->company_description[$index] && $key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $company_description->id,
-                                'locale' => $key,
-                                'key' => 'company_description'
-                            ],
-                            ['value' => $request->company_description[$index]]
-                        );
-                    }
-                }
-                if ($default_lang == $key && !($request->company_button_name[$index])) {
-                    if ($key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $company_button_name->id,
-                                'locale' => $key,
-                                'key' => 'company_button_name'
-                            ],
-                            ['value' => $company_button_name->getRawOriginal('value')]
-                        );
-                    }
-                } else {
-                    if ($request->company_button_name[$index] && $key != 'default') {
-                        Translation::updateOrInsert(
-                            [
-                                'translationable_type' => 'App\Models\DataSetting',
-                                'translationable_id' => $company_button_name->id,
-                                'locale' => $key,
-                                'key' => 'company_button_name'
-                            ],
-                            ['value' => $request->company_button_name[$index]]
-                        );
-                    }
-                }
-            }
 
-            Toastr::success(translate('messages.company_section_updated'));
+                Toastr::success(translate('messages.company_section_updated'));
 
         } else if ($tab == 'promotion-banner') {
-            $data = [];
-            $imageName = null;
-            $promotion_banner = DataSetting::where('type', 'react_landing_page')->where('key', 'promotion_banner')->first();
-            if ($promotion_banner) {
-                $data = json_decode($promotion_banner->value, true);
-            }
-            if (count($data) >= 6) {
-                Toastr::error(translate('messages.you_have_already_added_maximum_banner_image'));
-                return back();
-            }
-            if ($request->has('image')) {
-                $imageName = Helpers::upload('promotional_banner/', 'png', $request->file('image'));
-            }
-            array_push($data, [
-                'img' => $imageName,
-                // 'title' => $request->title,
-                // 'sub_title' => $request->sub_title,
-            ]);
+                $data = [];
+                $imageName = null;
+                $promotion_banner = DataSetting::where('type', 'react_landing_page')->where('key', 'promotion_banner')->first();
+                if ($promotion_banner) {
+                    $data = json_decode($promotion_banner->value, true);
+                }
+                if (count($data) >= 6) {
+                    Toastr::error(translate('messages.you_have_already_added_maximum_banner_image'));
+                    return back();
+                }
+                if ($request->has('image')) {
+                    $imageName = Helpers::upload('promotional_banner/', 'png', $request->file('image'));
+                }
+                array_push($data, [
+                    'img' => $imageName,
+                    // 'title' => $request->title,
+                    // 'sub_title' => $request->sub_title,
+                ]);
 
-            DB::table('data_settings')->updateOrInsert(['key' => 'promotion_banner','type' => 'react_landing_page'], [
-                'value' => json_encode($data),
-            ]);
-            Toastr::success(translate('messages.landing_page_promotion_banner_updated'));
+                DB::table('data_settings')->updateOrInsert(['key' => 'promotion_banner','type' => 'react_landing_page'], [
+                    'value' => json_encode($data),
+                ]);
+                Toastr::success(translate('messages.landing_page_promotion_banner_updated'));
         } else if ($tab == 'fixed-banner') {
             $fixed_promotional_banner = DataSetting::where('type', 'react_landing_page')->where('key', 'fixed_promotional_banner')->first();
             if ($fixed_promotional_banner == null) {
@@ -4715,7 +6203,7 @@ class BusinessSettingsController extends Controller
 
     public function login_url_page(){
         $data=array_column(DataSetting::whereIn('key',['store_employee_login_url','store_login_url','admin_employee_login_url','admin_login_url'
-        ])->get(['key','value'])->toArray(), 'value', 'key');
+                ])->get(['key','value'])->toArray(), 'value', 'key');
 
         return view('admin-views.login-setup.login_setup',compact('data'));
     }
@@ -4769,20 +6257,20 @@ class BusinessSettingsController extends Controller
 
             $data_value = $data?->{$request->field_name};
 
-            if($request?->json == 1){
-                $data_value = json_decode($data?->value ,true);
-                if (Storage::disk('public')->exists($request->image_path.'/'.$data_value[$request->field_name])) {
-                    Storage::disk('public')->delete($request->image_path.'/'.$data_value[$request->field_name]);
-                }
-                $data_value[$request->field_name] = null;
-                $data->value = json_encode($data_value);
-            }
-            else{
-                if (Storage::disk('public')->exists($request->image_path.'/'.$data_value)) {
-                    Storage::disk('public')->delete($request->image_path.'/'.$data_value);
-                }
-                $data->{$request->field_name} = null;
-            }
+                    if($request?->json == 1){
+                        $data_value = json_decode($data?->value ,true);
+                        if (Storage::disk('public')->exists($request->image_path.'/'.$data_value[$request->field_name])) {
+                            Storage::disk('public')->delete($request->image_path.'/'.$data_value[$request->field_name]);
+                        }
+                        $data_value[$request->field_name] = null;
+                        $data->value = json_encode($data_value);
+                    }
+                    else{
+                        if (Storage::disk('public')->exists($request->image_path.'/'.$data_value)) {
+                            Storage::disk('public')->delete($request->image_path.'/'.$data_value);
+                        }
+                        $data->{$request->field_name} = null;
+                    }
 
             $data?->save();
 
@@ -4980,7 +6468,7 @@ class BusinessSettingsController extends Controller
             Translation::where('translationable_type' , 'App\Models\TempProduct')->where('translationable_id' , $data->id)->update([
                 'translationable_type' => 'App\Models\Item',
                 'translationable_id' => $item->id
-            ]);
+                ]);
 
             $data->delete();
         }
