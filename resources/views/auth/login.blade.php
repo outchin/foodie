@@ -49,7 +49,7 @@
             </div>
         </div>
         <div class="auth-wrapper-right">
-            <label class="badge badge-soft-success __login-badge">
+            <label class="badge badge-soft-success __login-badge invisible">
                 {{translate('messages.software_version')}} : {{env('SOFTWARE_VERSION')}}
             </label>
 
@@ -121,7 +121,7 @@
 
                     <div class="d-flex justify-content-between mt-5">
                         <!-- Checkbox -->
-                        <div class="form-group">
+                        <div class="form-group invisible">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="termsCheckbox" {{ $password ? 'checked' : '' }}
                                         name="remember">
@@ -132,7 +132,7 @@
                         </div>
                         <!-- End Checkbox -->
                         <!-- forget password -->
-                        <div class="form-group" id="forget-password" style="display: {{ $role == 'admin' ? '' : 'none' }};">
+                        <div class="form-group invisible" id="forget-password" style="display: {{ $role == 'admin' ? '' : 'none' }};">
                             <div class="custom-control">
                                 <span type="button" data-toggle="modal" class="text-primary" data-target="#forgetPassModal">{{ translate('Forget Password') }}?</span>
                             </div>

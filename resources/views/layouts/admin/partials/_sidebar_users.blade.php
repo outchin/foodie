@@ -93,165 +93,9 @@
                     </a>
                 </li>
 
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/reviews/list') ? 'active' : '' }}">--}}
-{{--                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.users.delivery-man.reviews.list') }}" title="{{ translate('messages.reviews') }}">--}}
-{{--                        <i class="tio-star-outlined nav-icon"></i>--}}
-{{--                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">--}}
-{{--                            {{ translate('messages.reviews') }}--}}
-{{--                        </span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
+
                 @endif
                 <!-- End DeliveryMan -->
-
-{{--                <!-- Customer Section -->--}}
-{{--                @if (\App\CentralLogics\Helpers::module_permission_check('customer_management'))--}}
-{{--                <li class="nav-item">--}}
-{{--                    <small class="nav-subtitle" title="{{ translate('messages.customer_section') }}">{{ translate('messages.customer_management') }}</small>--}}
-{{--                    <small class="tio-more-horizontal nav-subtitle-replacer"></small>--}}
-{{--                </li>--}}
-{{--                <!-- Custommer -->--}}
-
-{{--                <li class="navbar-vertical-aside-has-menu {{ (Request::is('admin/users/customer/list') || Request::is('admin/users/customer/view*')) ? 'active' : '' }}">--}}
-{{--                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.users.customer.list') }}" title="{{ translate('messages.customers') }}">--}}
-{{--                        <i class="tio-poi-user nav-icon"></i>--}}
-{{--                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">--}}
-{{--                            {{ translate('messages.customers') }}--}}
-{{--                        </span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
-
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/customer/wallet*') ? 'active' : '' }}">--}}
-
-{{--                    <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.customer_wallet') }}">--}}
-{{--                        <i class="tio-wallet nav-icon"></i>--}}
-{{--                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate  text-capitalize">--}}
-{{--                            {{ translate('messages.customer_wallet') }}--}}
-{{--                        </span>--}}
-{{--                    </a>--}}
-
-{{--                    <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/users/customer/wallet*') ? 'block' : 'none' }}">--}}
-{{--                        <li class="nav-item {{ Request::is('admin/users/customer/wallet/add-fund') ? 'active' : '' }}">--}}
-{{--                            <a class="nav-link " href="{{ route('admin.users.customer.wallet.add-fund') }}" title="{{ translate('messages.add_fund') }}">--}}
-{{--                                <span class="tio-circle nav-indicator-icon"></span>--}}
-{{--                                <span class="text-truncate text-capitalize">{{ translate('messages.add_fund') }}</span>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-
-{{--                        <li class="nav-item {{ Request::is('admin/users/customer/wallet/report*') ? 'active' : '' }}">--}}
-{{--                            <a class="nav-link " href="{{ route('admin.users.customer.wallet.report') }}" title="{{ translate('messages.report') }}">--}}
-{{--                                <span class="tio-circle nav-indicator-icon"></span>--}}
-{{--                                <span class="text-truncate text-capitalize">{{ translate('messages.report') }}</span>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-
-{{--                        <li class="nav-item {{ Request::is('admin/users/customer/wallet/bonus*') ? 'active' : '' }}">--}}
-{{--                            <a class="nav-link " href="{{ route('admin.users.customer.wallet.bonus.add-new') }}" title="{{ translate('messages.bonus') }}">--}}
-{{--                                <span class="tio-circle nav-indicator-icon"></span>--}}
-{{--                                <span class="text-truncate text-capitalize">{{ translate('messages.bonus') }}</span>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                    </ul>--}}
-{{--                </li>--}}
-
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/customer/loyalty-point*') ? 'active' : '' }}">--}}
-{{--                    <a class="js-navbar-vertical-aside-menu-link nav-link  nav-link-toggle" href="javascript:" title="{{ translate('messages.customer_loyalty_point') }}">--}}
-{{--                        <i class="tio-medal nav-icon"></i>--}}
-{{--                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate  text-capitalize">--}}
-{{--                            {{ translate('messages.customer_loyalty_point') }}--}}
-{{--                        </span>--}}
-{{--                    </a>--}}
-
-{{--                    <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/users/customer/loyalty-point*') ? 'block' : 'none' }}">--}}
-{{--                        <li class="nav-item {{ Request::is('admin/users/customer/loyalty-point/report*') ? 'active' : '' }}">--}}
-{{--                            <a class="nav-link " href="{{ route('admin.users.customer.loyalty-point.report') }}" title="{{ translate('messages.report') }}">--}}
-{{--                                <span class="tio-circle nav-indicator-icon"></span>--}}
-{{--                                <span class="text-truncate text-capitalize">{{ translate('messages.report') }}</span>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                    </ul>--}}
-{{--                </li>--}}
-
-{{--                <!-- End Custommer -->--}}
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/customer/subscribed') ? 'active' : '' }}">--}}
-{{--                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.users.customer.subscribed') }}" title="{{translate('subscribed_emails')}}">--}}
-{{--                        <i class="tio-email-outlined nav-icon"></i>--}}
-{{--                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">--}}
-{{--                            {{ translate('messages.subscribed_mail_list') }}--}}
-{{--                        </span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/contact/contact-list') ? 'active' : '' }}">--}}
-{{--                    <a class="nav-link " href="{{ route('admin.users.contact.contact-list') }}" title="{{ translate('messages.contact_messages') }}">--}}
-{{--                        <span class="tio-message nav-icon"></span>--}}
-{{--                        <span class="text-truncate">{{ translate('messages.contact_messages') }}</span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
-{{--                --}}{{-- <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/customer/settings') ? 'active' : '' }}">--}}
-{{--                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.users.customer.settings') }}" title="{{ translate('messages.Customer_settings') }}">--}}
-{{--                        <i class="tio-settings nav-icon"></i>--}}
-{{--                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">--}}
-{{--                            {{ translate('messages.Customer_settings') }}--}}
-{{--                        </span>--}}
-{{--                    </a>--}}
-{{--                </li> --}}
-{{--                --}}{{-- <li--}}
-{{--                class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/message/list') ? 'active' : '' }}">--}}
-{{--                <a class="js-navbar-vertical-aside-menu-link nav-link"--}}
-{{--                    href="{{ route('admin.users.message.list') }}"--}}
-{{--                    title="{{ translate('messages.customer_chat') }}">--}}
-{{--                    <i class="tio-chat nav-icon"></i>--}}
-{{--                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">--}}
-{{--                        {{ translate('messages.Customer_Chat') }}--}}
-{{--                    </span>--}}
-{{--                </a>--}}
-{{--            </li> --}}
-{{--                @endif--}}
-{{--                <!-- End customer Section -->--}}
-
-
-
-{{--                <!-- Employee-->--}}
-
-{{--                <li class="nav-item">--}}
-{{--                    <small class="nav-subtitle" title="{{ translate('messages.employee_handle') }}">{{ translate('messages.employee') }}--}}
-{{--                        {{ translate('management') }}</small>--}}
-{{--                    <small class="tio-more-horizontal nav-subtitle-replacer"></small>--}}
-{{--                </li>--}}
-
-{{--                @if (\App\CentralLogics\Helpers::module_permission_check('custom_role'))--}}
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/custom-role*') ? 'active' : '' }}">--}}
-{{--                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.users.custom-role.create') }}" title="{{ translate('messages.employee_Role') }}">--}}
-{{--                        <i class="tio-incognito nav-icon"></i>--}}
-{{--                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.employee_Role') }}</span>--}}
-{{--                    </a>--}}
-{{--                </li>--}}
-{{--                @endif--}}
-
-{{--                @if (\App\CentralLogics\Helpers::module_permission_check('employee'))--}}
-{{--                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/employee*') ? 'active' : '' }}">--}}
-{{--                    <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.Employee') }}">--}}
-{{--                        <i class="tio-user nav-icon"></i>--}}
-{{--                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.employees') }}</span>--}}
-{{--                    </a>--}}
-{{--                    <ul class="js-navbar-vertical-aside-submenu nav nav-sub"  style="display:{{ Request::is('admin/users/employee*') ? 'block' : 'none' }}">--}}
-{{--                        <li class="nav-item {{ Request::is('admin/users/employee/add-new') ? 'active' : '' }}">--}}
-{{--                            <a class="nav-link " href="{{ route('admin.users.employee.add-new') }}" title="{{ translate('messages.add_new_Employee') }}">--}}
-{{--                                <span class="tio-circle nav-indicator-icon"></span>--}}
-{{--                                <span class="text-truncate">{{ translate('messages.add_new') }}</span>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-{{--                        <li class="nav-item {{ Request::is('admin/users/employee/list') ? 'active' : '' }}">--}}
-{{--                            <a class="nav-link " href="{{ route('admin.users.employee.list') }}" title="{{ translate('messages.Employee_list') }}">--}}
-{{--                                <span class="tio-circle nav-indicator-icon"></span>--}}
-{{--                                <span class="text-truncate">{{ translate('messages.list') }}</span>--}}
-{{--                            </a>--}}
-{{--                        </li>--}}
-
-{{--                    </ul>--}}
-{{--                </li>--}}
-{{--                @endif--}}
-{{--                <!-- End Employee -->--}}
 
 
                 <li class="nav-item py-5">
@@ -303,9 +147,7 @@
 
                             <div class="dropdown-divider"></div>
 
-                            <a class="dropdown-item" href="{{route('admin.settings')}}">
-                                <span class="text-truncate pr-2" title="Settings">{{translate('messages.settings')}}</span>
-                            </a>
+
 
                             <div class="dropdown-divider"></div>
 

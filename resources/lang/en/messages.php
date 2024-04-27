@@ -3597,4 +3597,5 @@
   'Pagination Navigation' => 'Pagination Navigation',
   'The password must be at least 6 characters.' => 'The password must be at least 6 characters.',
   'admin_updated_successfully' => 'Admin updated successfully',
+  'Last name is required!' => 'Last name is required!',
 );
