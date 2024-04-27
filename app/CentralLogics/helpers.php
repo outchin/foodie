@@ -1040,7 +1040,7 @@ class Helpers
                 "is_read": 0,
                 "icon" : "new",
                 "sound": "notification.wav",
-                "android_channel_id": "6ammart"
+                "android_channel_id": "foodie"
                 '.$click_action.'
             }
         }';
@@ -1119,7 +1119,7 @@ class Helpers
                     "is_read": 0,
                     "icon" : "new",
                     "sound": "notification.wav",
-                    "android_channel_id": "6ammart"
+                    "android_channel_id": "foodie"
                     '.$click_action.'
                   }
             }';
@@ -1143,7 +1143,7 @@ class Helpers
                     "is_read": 0,
                     "icon" : "new",
                     "sound": "notification.wav",
-                    "android_channel_id": "6ammart"
+                    "android_channel_id": "foodie"
                     '.$click_action.'
                   }
             }';
@@ -3139,66 +3139,8 @@ class Helpers
         return array_search($type,$data);
     }
 
-    public static function react_activation_check($react_domain, $react_license_code){
-        $scheme = str_contains($react_domain, 'localhost')?'http://':'https://';
-        $url = empty(parse_url($react_domain)['scheme']) ? $scheme . ltrim($react_domain, '/') : $react_domain;
-        $response = Http::post('https://store.6amtech.com/api/v1/customer/license-check', [
-            'domain_name' => str_ireplace('www.', '', parse_url($url, PHP_URL_HOST)),
-            'license_code' => $react_license_code
-        ]);
-        return ($response->successful() && isset($response->json('content')['is_active']) && $response->json('content')['is_active']);
-    }
 
-    public static function activation_submit($purchase_key)
-    {
-        $post = [
-            'purchase_key' => $purchase_key
-        ];
-        $live = 'https://check.6amtech.com';
-        $ch = curl_init($live . '/api/v1/software-check');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        $response = curl_exec($ch);
 
-        curl_close($ch);
-        $response_body = json_decode($response, true);
-
-        try {
-            if ($response_body['is_valid'] && $response_body['result']['item']['id'] == env('REACT_APP_KEY')) {
-                $previous_active = json_decode(BusinessSetting::where('key', 'app_activation')->first()->value ?? '[]');
-                $found = 0;
-                foreach ($previous_active as $key => $item) {
-                    if ($item->software_id == env('REACT_APP_KEY')) {
-                        $found = 1;
-                    }
-                }
-                if (!$found) {
-                    $previous_active[] = [
-                        'software_id' => env('REACT_APP_KEY'),
-                        'is_active' => 1
-                    ];
-                    DB::table('business_settings')->updateOrInsert(['key' => 'app_activation'], [
-                        'value' => json_encode($previous_active)
-                    ]);
-                }
-                return true;
-            }
-
-        } catch (\Exception $exception) {
-            info($exception->getMessage());
-
-            $previous_active[] = [
-                'software_id' => env('REACT_APP_KEY'),
-                'is_active' => 1
-            ];
-            DB::table('business_settings')->updateOrInsert(['key' => 'app_activation'], [
-                'value' => json_encode($previous_active)
-            ]);
-
-            return true;
-        }
-        return false;
-    }
 
     public static function react_domain_status_check(){
         $data = self::get_business_settings('react_setup');

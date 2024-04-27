@@ -323,14 +323,7 @@
                                     <img src="{{asset('/public/assets/admin/img/app.png')}}" alt="" class="mb-20">
                                     <h5 class="modal-title">{{translate('What_is_App_Version?')}}</h5>
                                 </div>
-                                <ul>
-                                    <li>
-                                        {{ translate('This_app_version_defines_the_Store,_Deliveryman,_and_User_app_version_of_6amMart.') }}
-                                    </li>
-                                    <li>
-                                        {{ translate('It_doesn’t_represent_the_Play_Store_or_App_Store_version.') }}
-                                    </li>
-                                </ul>
+
                             </div>
                         </div>
                         <div class="item">
