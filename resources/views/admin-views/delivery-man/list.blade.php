@@ -23,82 +23,7 @@
             <!-- Header -->
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">
-                        {{translate('messages.deliveryman_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$delivery_men->total()}}</span>
-                    </h5>
-                    @if(!isset(auth('admin')->user()->zone_id))
-                    <div class="col-sm-auto min--240">
-                        <select name="zone_id" class="form-control js-select2-custom"
-                                onchange="set_zone_filter('{{route('admin.users.delivery-man.list')}}', this.value)">
-                            <option value="all">{{ translate('messages.All_Zones') }}</option>
-                            @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
-                                <option
-                                    value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
-                                    {{$z['name']}}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @endif
-                    <form class="search-form">
-                                    <!-- Search -->
-                        {{-- @csrf --}}
-                        <div class="input-group input--group">
-                            <input id="datatableSearch_" type="search" name="search" class="form-control h--45px"
-                                    placeholder="{{translate('ex_:_search_name')}}" value="{{ request()->get('search') }}" aria-label="Search" required>
-                            <button type="submit" class="btn btn--secondary h--45px"><i class="tio-search"></i></button>
 
-                        </div>
-                        <!-- End Search -->
-                    </form>
-{{--                    <!-- Unfold -->--}}
-{{--                    <div class="hs-unfold mr-2">--}}
-{{--                        <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle h--45px min-height-40" href="javascript:;"--}}
-{{--                            data-hs-unfold-options='{--}}
-{{--                                    "target": "#usersExportDropdown",--}}
-{{--                                    "type": "css-animation"--}}
-{{--                                }'>--}}
-{{--                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}--}}
-{{--                        </a>--}}
-
-{{--                        <div id="usersExportDropdown"--}}
-{{--                            class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">--}}
-{{--                            --}}{{-- <span class="dropdown-header">{{ translate('messages.options') }}</span>--}}
-{{--                            <a id="export-copy" class="dropdown-item" href="javascript:;">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"--}}
-{{--                                    alt="Image Description">--}}
-{{--                                {{ translate('messages.copy') }}--}}
-{{--                            </a>--}}
-{{--                            <a id="export-print" class="dropdown-item" href="javascript:;">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"--}}
-{{--                                    alt="Image Description">--}}
-{{--                                {{ translate('messages.print') }}--}}
-{{--                            </a>--}}
-{{--                            <div class="dropdown-divider"></div> --}}
-{{--                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>--}}
-{{--                            <a id="export-excel" class="dropdown-item" href="{{route('admin.users.delivery-man.export', ['type'=>'excel',request()->getQueryString()])}}">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                    src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"--}}
-{{--                                    alt="Image Description">--}}
-{{--                                {{ translate('messages.excel') }}--}}
-{{--                            </a>--}}
-{{--                            <a id="export-csv" class="dropdown-item" href="{{route('admin.users.delivery-man.export', ['type'=>'csv',request()->getQueryString()])}}">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                    src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"--}}
-{{--                                    alt="Image Description">--}}
-{{--                                .{{ translate('messages.csv') }}--}}
-{{--                            </a>--}}
-{{--                            --}}{{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                    src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"--}}
-{{--                                    alt="Image Description">--}}
-{{--                                {{ translate('messages.pdf') }}--}}
-{{--                            </a> --}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <!-- End Unfold -->--}}
                 </div>
             </div>
             <!-- End Header -->
@@ -114,10 +39,10 @@
                         }'>
                     <thead class="thead-light">
                     <tr>
-                        <th class="border-0 text-capitalize">{{translate('sl')}}</th>
+                        <th class="border-0 text-capitalize">#</th>
                         <th class="border-0 text-capitalize">{{translate('messages.name')}}</th>
                         <th class="border-0 text-capitalize">{{translate('messages.contact_info')}}</th>
-                        <th class="border-0 text-capitalize">{{translate('messages.zone')}}</th>
+
                         <th class="border-0 text-capitalize">{{translate('messages.total_orders')}}</th>
                         <th class="border-0 text-capitalize">{{translate('messages.availability_status')}}</th>
                         <th class="border-0 text-center text-capitalize">{{translate('messages.action')}}</th>
@@ -130,14 +55,11 @@
                             <td>{{$key+$delivery_men->firstItem()}}</td>
                             <td>
                                 <a class="table-rest-info" href="{{route('admin.users.delivery-man.preview',[$dm['id']])}}">
-                                    <img onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
-                                            src="{{asset('storage/app/public/delivery-man')}}/{{$dm['image']}}" alt="{{$dm['f_name']}} {{$dm['l_name']}}">
+
                                     <div class="info">
                                         <h5 class="text-hover-primary mb-0">{{$dm['f_name'].' '.$dm['l_name']}}</h5>
                                         <span class="d-block text-body">
-                                            <span class="rating">
-                                            <i class="tio-star"></i> {{count($dm->rating)>0?number_format($dm->rating[0]->average, 1, '.', ' '):0}}
-                                            </span>
+
                                         </span>
                                     </div>
                                 </a>
@@ -145,22 +67,14 @@
                             <td>
                                 <a class="deco-none" href="tel:{{$dm['phone']}}">{{$dm['phone']}}</a>
                             </td>
-                            <td>
-                                @if($dm->zone)
-                                <label class="text--title font-medium mb-0">{{$dm->zone->name}}</label>
-                                @else
-                                <label class="text--title font-medium mb-0">{{translate('messages.zone_deleted')}}</label>
-                                @endif
-                            </td>
+
                             <td>
                                 <a class="deco-none" href="tel:{{$dm['phone']}}">{{count($dm['orders'])}}</a>
                             </td>
                             <td>
+
                                 <div>
-                                    {{translate('messages.currently_assigned_orders')}} : {{$dm->current_orders}}
-                                </div>
-                                <div>
-                                    {{translate('messages.active_status')}} :
+
                                     @if($dm->application_status == 'approved')
                                         @if($dm->active)
                                         <strong class="text-capitalize text-primary">{{translate('messages.online')}}</strong>
@@ -178,12 +92,11 @@
                                 <div class="btn--container justify-content-center">
                                     <a class="btn action-btn btn--warning btn-outline-warning"
                                             href="{{route('admin.users.delivery-man.preview',[$dm['id']])}}"
-                                            title="{{ translate('messages.view') }}"><i
-                                                class="tio-visible-outlined"></i>
+                                            title="{{ translate('messages.view') }}">View
                                         </a>
-                                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.delivery-man.edit',[$dm['id']])}}" title="{{translate('messages.edit')}}"><i class="tio-edit"></i>
+                                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.delivery-man.edit',[$dm['id']])}}" title="{{translate('messages.edit')}}">Edit</i>
                                         </a>
-                                        <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:" onclick="form_alert('delivery-man-{{$dm['id']}}','{{ translate('Want to remove this deliveryman ?') }}')" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                        <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:" onclick="form_alert('delivery-man-{{$dm['id']}}','{{ translate('Want to remove this deliveryman ?') }}')" title="{{translate('messages.delete')}}">Delete</i>
                                     </a>
                                     <form action="{{route('admin.users.delivery-man.delete',[$dm['id']])}}" method="post" id="delivery-man-{{$dm['id']}}">
                                         @csrf @method('delete')

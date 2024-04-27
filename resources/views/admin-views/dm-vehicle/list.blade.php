@@ -15,11 +15,6 @@
                     <h1 class="page-header-title"><i class="tio-car"></i> {{translate('messages.vehicles_category_list')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$vehicles->total()}}</span></h1>
                 </div>
 
-                <div class="col-sm-auto">
-                    <a class="btn btn--primary" href="{{route('admin.users.delivery-man.vehicle.create')}}">
-                        <i class="tio-add"></i> {{translate('messages.add_vehicle_category')}}
-                    </a>
-                </div>
             </div>
         </div>
         <!-- End Page Header -->
@@ -27,19 +22,7 @@
             <div class="col-sm-12 col-lg-12 mb-3 mb-lg-2">
                 <!-- Card -->
                 <div class="card">
-                    <div class="card-header py-2 border-0">
-                        <div class="search--button-wrapper">
-                            <h5 class="card-title"></h5>
-                            <form id="search-form">
-                                <!-- Search -->
-                                <div class="input--group input-group input-group-merge input-group-flush">
-                                    <input id="datatableSearch" type="search" name="search" class="form-control" placeholder="{{ translate('Ex_:_Search_by_type...') }}" aria-label="Search here">
-                                    <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
-                                </div>
-                                <!-- End Search -->
-                            </form>
-                        </div>
-                    </div>
+
                     <!-- Table -->
                     <div class="table-responsive datatable-custom">
                         <table id="columnSearchDatatable"
@@ -53,8 +36,6 @@
                             <tr>
                                 <th>{{ translate('messages.sl') }}</th>
                                 <th >{{translate('messages.Type')}}</th>
-                                <th >{{translate('messages.minimum_coverage_area')}} ({{ translate('messages.km') }}) </th>
-                                <th >{{translate('messages.Maximum_coverage_area')}} ({{ translate('messages.km') }})</th>
                                 <th >{{translate('messages.Extra_charges')}}  ({{ \App\CentralLogics\Helpers::currency_symbol() }})</th>
                                 <th>{{translate('messages.status')}}</th>
                                 <th class="text-center">{{translate('messages.action')}}</th>
@@ -69,16 +50,7 @@
                                         <span class="d-block text-body"><a href="{{route('admin.users.delivery-man.vehicle.view',[$vehicle->id])}}">{{Str::limit($vehicle['type'],25, '...')}}</a>
                                         </span>
                                     </td>
-                                    <td>
-                                        <span class="bg-gradient-light text-dark">
-                                            {{ $vehicle->starting_coverage_area }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="bg-gradient-light text-dark">
-                                            {{ $vehicle->maximum_coverage_area }}
-                                        </span>
-                                    </td>
+
                                     <td>
                                         <span class="bg-gradient-light text-dark">
                                          {{ \App\CentralLogics\Helpers::format_currency($vehicle->extra_charges) }}

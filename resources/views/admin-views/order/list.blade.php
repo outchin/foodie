@@ -17,13 +17,7 @@
                         <span class="page-header-icon">
                             <img src="{{asset('public/assets/admin/img/order.png')}}" class="w--26" alt="">
                         </span>
-                        <span>
-                            @if ($parcel_order) {{translate('messages.parcel_orders')}}
-                            @elseif(Request::is('admin/refund/*') ) {{translate('messages.Refund')}}  {{translate(str_replace('_',' ',$status))}}
-                            @else {{translate(str_replace('_',' ',$status))}} {{translate('messages.orders')}}
-                            @endif
-                            <span class="badge badge-soft-dark ml-2">{{$total}}</span>
-                        </span>
+
                     </h1>
                 </div>
             </div>
@@ -33,237 +27,7 @@
 
         <!-- Card -->
         <div class="card">
-            <!-- Header -->
-            <div class="card-header py-1 border-0">
-                <div class="search--button-wrapper justify-content-end">
-                    <form class="search-form min--260">
-                        <!-- Search -->
-                        <div class="input-group input--group">
-                            <input id="datatableSearch_" type="search" name="search" class="form-control h--40px"
-                                    placeholder="{{ translate('messages.Ex:') }} 10010" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search')}}" required>
-                                    @if($parcel_order)
-                                    <input type="hidden" name="parcel_order" value="{{$parcel_order}}">
-                                    @endif
-                            <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
 
-                        </div>
-                        <!-- End Search -->
-                    </form>
-                    <!-- Datatable Info -->
-                    <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0 initial-hidden">
-                        <div class="d-flex align-items-center">
-                                <span class="font-size-sm mr-3">
-                                <span id="datatableCounter">0</span>
-                                {{translate('messages.selected')}}
-                                </span>
-                            {{--<a class="btn btn-sm btn-outline-danger" href="javascript:;">
-                                <i class="tio-delete-outlined"></i> Delete
-                            </a>--}}
-                        </div>
-                    </div>
-                    <!-- End Datatable Info -->
-
-{{--                    <!-- Unfold -->--}}
-{{--                    <div class="hs-unfold mr-2">--}}
-{{--                        <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle h--40px" href="javascript:;"--}}
-{{--                            data-hs-unfold-options='{--}}
-{{--                                "target": "#usersExportDropdown",--}}
-{{--                                "type": "css-animation"--}}
-{{--                            }'>--}}
-{{--                            <i class="tio-download-to mr-1"></i> {{translate('messages.export')}}--}}
-{{--                        </a>--}}
-
-{{--                        <div id="usersExportDropdown"--}}
-{{--                                class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">--}}
-{{--                            <span class="dropdown-header">{{translate('messages.options')}}</span>--}}
-{{--                            <a id="export-copy" class="dropdown-item" href="javascript:;" title="{{translate('messages.current_page_only')}}">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                        src="{{asset('public/assets/admin')}}/svg/illustrations/copy.svg"--}}
-{{--                                        alt="Image Description">--}}
-{{--                                {{translate('messages.copy')}}--}}
-{{--                            </a>--}}
-{{--                            <a id="export-print" class="dropdown-item" href="javascript:;" title="{{translate('messages.current_page_only')}}">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                        src="{{asset('public/assets/admin')}}/svg/illustrations/print.svg"--}}
-{{--                                        alt="Image Description">--}}
-{{--                                {{translate('messages.print')}}--}}
-{{--                            </a>--}}
-{{--                            <div class="dropdown-divider"></div>--}}
-{{--                            <span class="dropdown-header">{{translate('messages.download_options')}}</span>--}}
-{{--                            <a id="export-excel" class="dropdown-item" href="javascript:;">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                        src="{{asset('public/assets/admin')}}/svg/components/excel.svg"--}}
-{{--                                        alt="Image Description">--}}
-{{--                                {{translate('messages.excel')}}--}}
-{{--                            </a>--}}
-{{--                            <a id="export-csv" class="dropdown-item" href="javascript:;">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                        src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg"--}}
-{{--                                        alt="Image Description">--}}
-{{--                                .{{translate('messages.csv')}}--}}
-{{--                            </a>--}}
-{{--                            <!-- <a id="export-pdf" class="dropdown-item" href="javascript:;">--}}
-{{--                                <img class="avatar avatar-xss avatar-4by3 mr-2"--}}
-{{--                                        src="{{asset('public/assets/admin')}}/svg/components/pdf.svg"--}}
-{{--                                        alt="Image Description">--}}
-{{--                                {{translate('messages.pdf')}}--}}
-{{--                            </a> -->--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <!-- End Unfold -->--}}
-                    @if(Request::is('admin/refund/*'))
-                    <div class="select-item">
-                        <select name="slist" class="form-control js-select2-custom"
-                        onchange="window.location.href=this.options[this.selectedIndex].value;" >
-                            <option {{($status=='requested')?'selected':''}} value="{{ route('admin.refund.refund_attr', ['requested']) }}">{{translate('messages.Refund Requests')}}</option>
-                            <option {{($status=='refunded')?'selected':''}} value="{{ route('admin.refund.refund_attr', ['refunded']) }}">{{translate('messages.Refund')}}</option>
-                            <option {{($status=='rejected')?'selected':''}} value="{{ route('admin.refund.refund_attr', ['rejected']) }}">{{translate('Rejected')}}</option>
-                        </select>
-                    </div>
-                    @endif
-                    <!-- Unfold -->
-                    <div class="hs-unfold mr-2">
-                        <a class="js-hs-unfold-invoker btn btn-sm btn-white h--40px" href="javascript:;"
-                            onclick="$('#datatableFilterSidebar,.hs-unfold-overlay').show(500)">
-                            <i class="tio-filter-list mr-1"></i> {{ translate('messages.filter') }} <span class="badge badge-success badge-pill ml-1" id="filter_count"></span>
-                        </a>
-                    </div>
-                    <!-- End Unfold -->
-                    <!-- Unfold -->
-{{--                    <div class="hs-unfold">--}}
-{{--                        <a class="js-hs-unfold-invoker btn btn-sm btn-white h--40px" href="javascript:;"--}}
-{{--                            data-hs-unfold-options='{--}}
-{{--                                "target": "#showHideDropdown",--}}
-{{--                                "type": "css-animation"--}}
-{{--                            }'>--}}
-{{--                            <i class="tio-table mr-1"></i> {{translate('messages.columns')}}--}}
-{{--                        </a>--}}
-
-{{--                        <div id="showHideDropdown"--}}
-{{--                                class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right dropdown-card min--240">--}}
-{{--                            <div class="card card-sm">--}}
-{{--                                <div class="card-body">--}}
-{{--                                    <div class="d-flex justify-content-between align-items-center mb-3">--}}
-{{--                                        <span class="mr-2">{{translate('messages.order')}}</span>--}}
-
-{{--                                        <!-- Checkbox Switch -->--}}
-{{--                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_order">--}}
-{{--                                            <input type="checkbox" class="toggle-switch-input"--}}
-{{--                                                    id="toggleColumn_order" checked>--}}
-{{--                                            <span class="toggle-switch-label">--}}
-{{--                                            <span class="toggle-switch-indicator"></span>--}}
-{{--                                            </span>--}}
-{{--                                        </label>--}}
-{{--                                        <!-- End Checkbox Switch -->--}}
-{{--                                    </div>--}}
-
-{{--                                    <div class="d-flex justify-content-between align-items-center mb-3">--}}
-{{--                                        <span class="mr-2">{{translate('messages.date')}}</span>--}}
-
-{{--                                        <!-- Checkbox Switch -->--}}
-{{--                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_date">--}}
-{{--                                            <input type="checkbox" class="toggle-switch-input"--}}
-{{--                                                    id="toggleColumn_date" checked>--}}
-{{--                                            <span class="toggle-switch-label">--}}
-{{--                                            <span class="toggle-switch-indicator"></span>--}}
-{{--                                            </span>--}}
-{{--                                        </label>--}}
-{{--                                        <!-- End Checkbox Switch -->--}}
-{{--                                    </div>--}}
-
-{{--                                    <div class="d-flex justify-content-between align-items-center mb-3">--}}
-{{--                                        <span class="mr-2">{{translate('messages.customer')}}</span>--}}
-
-{{--                                        <!-- Checkbox Switch -->--}}
-{{--                                        <label class="toggle-switch toggle-switch-sm"--}}
-{{--                                                for="toggleColumn_customer">--}}
-{{--                                            <input type="checkbox" class="toggle-switch-input"--}}
-{{--                                                    id="toggleColumn_customer" checked>--}}
-{{--                                            <span class="toggle-switch-label">--}}
-{{--                                            <span class="toggle-switch-indicator"></span>--}}
-{{--                                            </span>--}}
-{{--                                        </label>--}}
-{{--                                        <!-- End Checkbox Switch -->--}}
-{{--                                    </div>--}}
-{{--                                    <div class="d-flex justify-content-between align-items-center mb-3">--}}
-{{--                                        <span class="mr-2">{{$parcel_order?translate('messages.parcel_category'):translate('messages.store')}}</span>--}}
-
-{{--                                        <!-- Checkbox Switch -->--}}
-{{--                                        <label class="toggle-switch toggle-switch-sm"--}}
-{{--                                                for="toggleColumn_store">--}}
-{{--                                            <input type="checkbox" class="toggle-switch-input"--}}
-{{--                                                    id="toggleColumn_store" checked>--}}
-{{--                                            <span class="toggle-switch-label">--}}
-{{--                                            <span class="toggle-switch-indicator"></span>--}}
-{{--                                            </span>--}}
-{{--                                        </label>--}}
-{{--                                        <!-- End Checkbox Switch -->--}}
-{{--                                    </div>--}}
-
-{{--                                    --}}{{-- <div class="d-flex justify-content-between align-items-center mb-3">--}}
-{{--                                        <span class="mr-2 text-capitalize">{{translate('messages.payment_status')}}</span>--}}
-
-{{--                                        <!-- Checkbox Switch -->--}}
-{{--                                        <label class="toggle-switch toggle-switch-sm"--}}
-{{--                                                for="toggleColumn_payment_status">--}}
-{{--                                            <input type="checkbox" class="toggle-switch-input"--}}
-{{--                                                    id="toggleColumn_payment_status" checked>--}}
-{{--                                            <span class="toggle-switch-label">--}}
-{{--                                            <span class="toggle-switch-indicator"></span>--}}
-{{--                                            </span>--}}
-{{--                                        </label>--}}
-{{--                                        <!-- End Checkbox Switch -->--}}
-{{--                                    </div> --}}
-
-{{--                                    <div class="d-flex justify-content-between align-items-center mb-3">--}}
-{{--                                        <span class="mr-2">{{translate('messages.total')}}</span>--}}
-
-{{--                                        <!-- Checkbox Switch -->--}}
-{{--                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_total">--}}
-{{--                                            <input type="checkbox" class="toggle-switch-input"--}}
-{{--                                                    id="toggleColumn_total" checked>--}}
-{{--                                            <span class="toggle-switch-label">--}}
-{{--                                            <span class="toggle-switch-indicator"></span>--}}
-{{--                                            </span>--}}
-{{--                                        </label>--}}
-{{--                                        <!-- End Checkbox Switch -->--}}
-{{--                                    </div>--}}
-{{--                                    <div class="d-flex justify-content-between align-items-center mb-3">--}}
-{{--                                        <span class="mr-2">{{translate('messages.order_status')}}</span>--}}
-
-{{--                                        <!-- Checkbox Switch -->--}}
-{{--                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_order_status">--}}
-{{--                                            <input type="checkbox" class="toggle-switch-input"--}}
-{{--                                                    id="toggleColumn_order_status" checked>--}}
-{{--                                            <span class="toggle-switch-label">--}}
-{{--                                            <span class="toggle-switch-indicator"></span>--}}
-{{--                                            </span>--}}
-{{--                                        </label>--}}
-{{--                                        <!-- End Checkbox Switch -->--}}
-{{--                                    </div>--}}
-
-{{--                                    <div class="d-flex justify-content-between align-items-center">--}}
-{{--                                        <span class="mr-2">{{translate('messages.actions')}}</span>--}}
-
-{{--                                        <!-- Checkbox Switch -->--}}
-{{--                                        <label class="toggle-switch toggle-switch-sm"--}}
-{{--                                                for="toggleColumn_actions">--}}
-{{--                                            <input type="checkbox" class="toggle-switch-input"--}}
-{{--                                                    id="toggleColumn_actions" checked>--}}
-{{--                                            <span class="toggle-switch-label">--}}
-{{--                                            <span class="toggle-switch-indicator"></span>--}}
-{{--                                            </span>--}}
-{{--                                        </label>--}}
-{{--                                        <!-- End Checkbox Switch -->--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-                    <!-- End Unfold -->
-                </div>
-            </div>
-            <!-- End Header -->
 
             <!-- Table -->
             <div class="table-responsive datatable-custom">
@@ -287,7 +51,7 @@
                     <thead class="thead-light">
                     <tr>
                         <th class="border-0">
-                            {{translate('messages.sl')}}
+                            #
                         </th>
                         <th class="table-column-pl-0 border-0">{{translate('messages.order_id')}}</th>
                         <th class="border-0">{{translate('messages.order_date')}}</th>
@@ -300,7 +64,7 @@
                         <th class="border-0">Receiver Information</th>
                         <th class="border-0">{{translate('messages.total_amount')}}</th>
                         <th class="text-center border-0">{{translate('messages.order_status')}}</th>
-                        <th class="text-center border-0">{{translate('messages.actions')}}</th>
+
                     </tr>
                     </thead>
 
@@ -437,26 +201,9 @@
                                       {{str_replace('_',' ',$order['order_status'])}}
                                     </span>
                                 @endif
-                                @if($order['order_type']=='take_away')
-                                    <div class="text-info mt-1">
-                                        {{translate('messages.take_away')}}
-                                    </div>
-                                @else
-                                    <div class="text-title mt-1">
-                                      {{translate('messages.home Delivery')}}
-                                    </div>
-                                @endif
+
                             </td>
-                            <td>
-                                <div class="btn--container justify-content-center">
-                                    <a class="ml-2 btn btn-sm btn--warning btn-outline-warning action-btn" href="{{route($parcel_order?'admin.parcel.order.details':'admin.order.details',['id'=>$order['id']])}}">
-                                        <i class="tio-invisible"></i>
-                                    </a>
-{{--                                    <a class="ml-2 btn btn-sm btn--primary btn-outline-primary action-btn" href="{{route($parcel_order?'admin.order.generate-invoice':'admin.order.generate-invoice',['id'=>$order['id']])}}">--}}
-{{--                                        <i class="tio-print"></i>--}}
-{{--                                    </a>--}}
-                                </div>
-                            </td>
+
                         </tr>
 
                     @endforeach
@@ -582,12 +329,6 @@
                     </div>
                     @endif
 
-{{--                    <hr class="my-4">--}}
-
-{{--                    <div class="custom-control custom-radio mb-2">--}}
-{{--                        <input type="checkbox" id="scheduled" name="scheduled" class="custom-control-input" value="1" {{isset($scheduled)?($scheduled==1?'checked':''):''}}>--}}
-{{--                        <label class="custom-control-label text-uppercase" for="scheduled">{{translate('messages.scheduled')}}</label>--}}
-{{--                    </div>--}}
                     @endif
                     @if (!$parcel_order)
                         <hr class="my-4">

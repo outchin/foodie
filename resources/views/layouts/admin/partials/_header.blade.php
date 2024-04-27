@@ -31,7 +31,7 @@
 {{--                        <a href="{{ route('admin.transactions.store.withdraw_list')}}" id="tourb-7" class="__nav-link {{ Request::is('admin/transactions*') ? 'active' : '' }}">--}}
                         <a href="{{ route('admin.transactions.report.day-wise-report')}}" id="tourb-7" class="__nav-link {{ Request::is('admin/transactions*') ? 'active' : '' }}">
                             <img src="{{asset('/public/assets/admin/img/new-img/transaction-and-report.svg')}}" alt="public/img">
-                            <span>{{ translate('Transactions & Reports')}}</span>
+                            <span>Transaction Reports</span>
                         </a>
                     </li>
 
