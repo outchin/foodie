@@ -109,9 +109,7 @@
                                     <label class="form-label text-capitalize">
                                         {{ translate('landing_page_url') }}
                                     </label>
-                                    <input type="text"
-                                        placeholder="{{ translate('messages.Ex: https://6ammart-web.6amtech.com/') }}"
-                                        class="form-control h--45px" name="redirect_url" value="{{ $redirect_url }}">
+
                                 </div>
                             </div>
                         </div>
@@ -198,11 +196,7 @@
                                     <div class="text-center max-w-595 mx-auto py-4">
                                         <img src="{{ asset('/public/assets/admin/img/landing-icon-2.png') }}"
                                             class="mb-3" alt="">
-                                        <p class="m-0">
-                                            {{ translate('Currently_you_are_using_6amMart_Default_Admin_Landing_Page_Theme.') }}
-                                            <a href="{{ route('home') }}"
-                                                class="text--primary text-underline">{{ translate('Visit_Landing_Page') }}</a>
-                                        </p>
+
                                     </div>
                                 @else
                                     <div class="text-center max-w-487 mx-auto py-4">
