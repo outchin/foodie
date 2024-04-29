@@ -3599,4 +3599,10 @@
   'admin_updated_successfully' => 'Admin updated successfully',
   'Last name is required!' => 'Last name is required!',
   'maximum_coverage_area' => 'Maximum coverage area',
+  'select_a_vehicle' => 'Select a vehicle',
+  'Vehicle_category_updated' => 'Vehicle category updated',
+  'maximum_coverage_area_hint' => 'Maximum coverage area hint',
+  'minimum_coverage_area_hint' => 'Minimum coverage area hint',
+  'starting_coverage_area' => 'Starting coverage area',
+  'This amount will be added with delivery charge' => 'This amount will be added with delivery charge',
 );
